@@ -68,15 +68,15 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             - Quick start > 2번 복사 > /src/main/webapp/base/bootstrap.html 에 붙여줌
                 - 그런 후 bootstrap example에 들어가서 마음에 드는 UI 일부분 Ctrl + Shift + C 로 확인 후 페이지 소스보기 > 복사 > bootstrap.html에 붙여줌
                 * Headers, Heroes, Footers
-				
-		- grid example(record.html, member_list.html)
-    	    * https://getbootstrap.com/docs/5.3/layout/grid/ 
-			
-		- Sign-in example(login.html)
-		    * https://getbootstrap.com/docs/5.3/examples/sign-in/
-		
-		* Source file download
-		    - https://getbootstrap.com/docs/5.3/getting-started/download/
-			    - Source files, Examples download
-				- "bootstrap-5.3.0-alpha1-examples\bootstrap-5.3.0-alpha1-examples\sign-in\sign-in.css"
-				- /src/main/webapp/css/sign-in.css 폴더 생성 후 넣어줌
+                
+        - grid example(record.html, member_list.html)
+            * https://getbootstrap.com/docs/5.3/layout/grid/ 
+            
+        - Sign-in example(login.html)
+            * https://getbootstrap.com/docs/5.3/examples/sign-in/
+        
+        * Source file download
+            - https://getbootstrap.com/docs/5.3/getting-started/download/
+                - Source files, Examples download
+                - "bootstrap-5.3.0-alpha1-examples\bootstrap-5.3.0-alpha1-examples\sign-in\sign-in.css"
+                - /src/main/webapp/css/sign-in.css 폴더 생성 후 넣어줌
