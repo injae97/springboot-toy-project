@@ -1,9 +1,12 @@
-<!doctype html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<!doctype html>    
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MemberList Page</title>
+    <title>Home Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   </head>
   <body>
@@ -20,48 +23,31 @@
       </ul>
       
       <div class="col-md-3 text-end">
-          <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='/base/login.html'" >Login</button>
-          <button type="button" class="btn btn-primary" onclick="location.href='/base/join.html'">Sign-up</button>
+          <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='/login/login'" >Login</button>
+          <button type="button" class="btn btn-primary" onclick="location.href='/login/join'">Sign-up</button>
       </div>
     </header>
   </div>
   <!-- Headers -->  
   
-    <!-- grid -->  
-    <div class="container">
-        <div class="row mb-3">
-            <div class="col">No</div>
-            <div class="col">아이디</div>
-            <div class="col">이름</div>
-            <div class="col">이메일</div>
-            <div class="col">등록일자</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">No</div>
-            <div class="col">아이디</div>
-            <div class="col">이름</div>
-            <div class="col">이메일</div>
-            <div class="col">등록일자</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">No</div>
-            <div class="col">아이디</div>
-            <div class="col">이름</div>
-            <div class="col">이메일</div>
-            <div class="col">등록일자</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">No</div>
-            <div class="col">아이디</div>
-            <div class="col">이름</div>
-            <div class="col">이메일</div>
-            <div class="col">등록일자</div>
+    <!-- Headers -->  
+    <div class="px-4 py-5 my-5 text-center">
+	    <img class="d-block mx-auto mb-4" src="/img/cat.jpg">
+	    <h1 class="display-5 fw-bold">Centered hero</h1>
+	    <div class="col-lg-6 mx-auto">
+	      <p class="lead mb-4">Spring boot + JSP + Mybatis(Oracle) + Spring Tool Suite(IDE)</p>
+	      Java version: 1.8<br> 
+	      dev tools: Spring Tool Suite (IDE)<br>
+	      DBMS: Oracle<br>
+	      View: jsp<br>
+	      Mapper: Mybatis<br><br><br>
+	      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+	        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>
+	        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
+	      </div>
         </div>
     </div>
-    <!-- grid --> 
+    <!-- Headers --> 
   
 
   <!-- footers image -->
