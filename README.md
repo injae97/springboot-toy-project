@@ -44,7 +44,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
         
-## 💡 Guide
+## 💡 TIL
     [2023-01-26]
     a.  webapp에 필요한 디렉토리 생성
         1. /src/main/webapp/index.html 에 index.html 생성
@@ -101,6 +101,17 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
         * 화면단(view jsp file)에서 버튼 클릭시 링크대로 이동하게 수정
             - 자바단(Controller)에서 RequestMapping 와 GetMapping을 적절하게 사용
                - 그런 후 컨트롤러에 설정한 값대로 각 화면단 jsp 파일의 href 수정
+	
+	d. 공통 헤더 분리 후 import
+	    - /src/main/webapp/WEB-INF/views/common/ (header.jsp, footer.jsp)
+        - 각 화면단(jsp) 파일들에서 header, footer 부분을 지우고 공통 헤더 부분을 import
+		   	<%@ include file="/WEB-INF/views/common/header.jsp" %>
+        	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+			* 꼭 지운 header, footer 위치에서 import 해줘야함
+	
+	e. application.properties Setting(jsp)
+		- spring.mvc.view.prefix=/WEB-INF/views/
+		- spring.mvc.view.suffix=.jsp
             
             
 ## 💡 Web Knowledge
