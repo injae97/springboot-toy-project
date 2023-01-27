@@ -80,3 +80,34 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 - Source files, Examples download
                 - "bootstrap-5.3.0-alpha1-examples\bootstrap-5.3.0-alpha1-examples\sign-in\sign-in.css"
                 - /src/main/webapp/css/sign-in.css 폴더 생성 후 넣어줌
+                
+    
+    [2023-01-27]
+    a. MVC 흐름
+        - Request > Controller > Model > View 
+    
+    b. Home Page Setting
+        a. src/main/java/com/spring/boot/controller(package create)
+        b. src/main/java/com/spring/boot/controller/Home.java(class create)
+            - @Controller : 내가 바로 컨트롤러다.
+            - @RequestMapping : @RequestMapping("/")로 들어오면 return jsp file 화면을 보여주겠다.  
+            
+            
+## 💡 Guide forward(request) vs sendRedirect(response)
+    - HTTP 통신으로 생각
+    - forward(request): forward는 request를 계속적으로 던져주는 것 (WAS 내부에서만 요청자가 입력한 값을 던져줌)
+        * 통로를 통해 진입한 곳은 경로가 보이지 않는다.
+    - sendRedirect(response): response를 다시 다른 곳으로 넘겨주는 것
+    
+    a. forward(request)
+        - /WEB-INF/views/*.jsp (호출 성공)
+        - /jsp/*.jsp (호출 성공)
+        - https://www.naver.com (호출 실패 - Error)
+        
+        * 구조 : 요청자(Client) > request > localhost[WAS] Call > WEB-INF/views/list.jsp        
+                
+    b. sendRedirect(response)
+        - /WEB-INF/views/*.jsp (호출 실패 - Error)
+            - response는 요청자로 보내줘야하는데 자기 일 끝났다고 요청자 말고 직접 호출시킴(그래서 외부 접속이 됨)
+        - /jsp/*.jsp (호출 성공)
+        - https://www.naver.com (호출 성공)
