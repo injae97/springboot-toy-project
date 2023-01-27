@@ -14,17 +14,17 @@ public class Home {
 	 */
 	@GetMapping("")
 	public String doHome() {
-		return "/WEB-INF/views/home/home.jsp";
+		return "/home/home";
 	}
 	
 	@GetMapping("/record")
 	public String dorecord() {
-		return "/WEB-INF/views/home/record.jsp";
+		return "/home/record";
 	}
 	
 	@GetMapping("/member_list")
 	public String domember() {
-		return "/WEB-INF/views/home/member_list.jsp";
+		return "/home/member_list";
 	}
 }
 

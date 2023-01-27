@@ -10,11 +10,11 @@ public class Login {
 
 	@GetMapping("login")
 	public String dologin() {
-		return "/WEB-INF/views/login/login.jsp";
+		return "/login/login";
 	}
 	
 	@GetMapping("join")
 	public String dojoin() {
-		return "/WEB-INF/views/login/join.jsp";
+		return "/login/join";
 	}
 }
