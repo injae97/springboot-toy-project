@@ -84,7 +84,8 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
     
     [2023-01-27]
     a. MVC 흐름
-        - Request > Controller > Model > View 
+        - Request > 1. Controller > 2. Model > 3. View
+		    * WAS : Controller, Model, View
     
     b. Home Page Setting
         a. src/main/java/com/spring/boot/controller(package create)
@@ -93,21 +94,64 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             - @RequestMapping : @RequestMapping("/")로 들어오면 return jsp file 화면을 보여주겠다.  
             
             
-## 💡 Guide forward(request) vs sendRedirect(response)
+## 💡 forward(request) vs sendRedirect(response)
     - HTTP 통신으로 생각
     - forward(request): forward는 request를 계속적으로 던져주는 것 (WAS 내부에서만 요청자가 입력한 값을 던져줌)
         * 통로를 통해 진입한 곳은 경로가 보이지 않는다.
     - sendRedirect(response): response를 다시 다른 곳으로 넘겨주는 것
     
-    a. forward(request)
+    a. forward(request)  = Spring return "view path"
         - /WEB-INF/views/*.jsp (호출 성공)
         - /jsp/*.jsp (호출 성공)
         - https://www.naver.com (호출 실패 - Error)
         
         * 구조 : 요청자(Client) > request > localhost[WAS] Call > WEB-INF/views/list.jsp        
                 
-    b. sendRedirect(response)
+    b. sendRedirect(response) = Spring redirect:/path 
         - /WEB-INF/views/*.jsp (호출 실패 - Error)
             - response는 요청자로 보내줘야하는데 자기 일 끝났다고 요청자 말고 직접 호출시킴(그래서 외부 접속이 됨)
         - /jsp/*.jsp (호출 성공)
         - https://www.naver.com (호출 성공)
+		
+		
+## 💡 Spring - Controller & RestController 에 대한 기본적인 이해
+    a. Controller
+		@Controller
+		@RequestMapping("URL-PATH")
+		public String doDefault() {
+			return "result"; // result.jsp 화면 렌더링
+		}
+	
+	b. RestController
+	    @Controller + @ResponBody = @RestController
+		
+		/* RestController.class */
+		@RestController
+		public class RestController {
+		
+			@RequestMapping("URL-PATH")
+			public String doResponse() {
+			String strContents = "View : ResponBody!! <HR>  ";
+			return strContents;
+		    }
+	    }
+	
+
+    * 1 HTTPServletResponse
+	    - java에서 jsp를 만든 것
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf-8");
+		PrintWriter out = response.getWriter();
+		out.println("<html><body>");
+		out.println(" View : response Self");
+		out.println("</body></html>");
+		
+	* 2 @ResponBody
+		@RequestMapping("URL-PATH")
+		@ResponBody
+		public String useResponsebody() {
+		    String strContents = "View : ResponBody!! ";
+			return strContents;
+		}
+		
+	* HTTPServletResponse 소스코드와 @ResponBody 안에 있는 소스코드와 동일
