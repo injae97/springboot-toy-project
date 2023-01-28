@@ -52,7 +52,7 @@
         <% } %>
 
         <div class="row mb-3">
-            <div class="col">No(VO)</div>
+            <div class="col">No(VO-Lombok use)</div>
             <div class="col">공부일자</div>
             <div class="col">공부내용</div>
             <div class="col">등록일자</div>

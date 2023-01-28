@@ -1,14 +1,17 @@
 package com.spring.boot.vo;
 
+import lombok.Data;
+
+@Data
 public class Vo_record {
 	
 	private String KEY_ID;
 	private String STUDY_DAY;
 	private String CONTENTS;
 	private String REG_DAY;
-	
-	
-	/* Constructor */
+		
+	/* 
+	// Constructor
 	public Vo_record(String kEY_ID, String sTUDY_DAY, String cONTENTS, String rEG_DAY) {
 		super();
 		KEY_ID = kEY_ID;
@@ -17,7 +20,7 @@ public class Vo_record {
 		REG_DAY = rEG_DAY;
 	}
 	
-	/* Getter & Setter */
+	// Getter & Setter
 	public String getKEY_ID() {
 		return KEY_ID;
 	}
@@ -42,4 +45,5 @@ public class Vo_record {
 	public void setREG_DAY(String rEG_DAY) {
 		REG_DAY = rEG_DAY;
 	}	
+	*/
 }
