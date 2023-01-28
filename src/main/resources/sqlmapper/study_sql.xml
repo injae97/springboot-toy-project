@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- DB연결을 위한 DAO 파일 경로 지정 -->
+<!-- id 값은 연결한 DAO파일에서 실행시킬 메서드 이름 -->
+<!-- 해당 메서드의 type은 Map -->
+<mapper namespace="com.spring.boot.dao.StudyDao">
+    <select id="doStudyList" resultType="map">	    
+	    SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+	    FROM Study_record
+    </select>
+</mapper>
