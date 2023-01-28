@@ -133,9 +133,29 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             - XML 파일 생성(DB 쿼리)
         c. /src/main/java/com/spring/boot/service
             - @Service, @Autowired(DAO), class로 생성 (interface X)
+            
+    c. jsp에 데이터 바인딩(Service > DAO > Mapper > DB > Controller(request) > View)
+        <%@page import="java.util.List"%>
+        <%@page import="java.util.Map"%>
+    
+        <%
+            List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("list");
+        %>
         
-        
+        <% for(Map<String, String> map: list) { %>
+        <div class="row mb-3">
+            <div class="col"><%= map.get("KEY_ID") %></div>
+            <div class="col"><%= map.get("STUDY_DAY") %></div>
+            <div class="col"><%= map.get("CONTENTS") %></div>
+            <div class="col"><%= map.get("REG_DAY") %></div>
+        </div>
+        <% } %>
 
+        * Controller에서 jsp 렌더링 하는 과정에 @ResponseBody 사용할 경우 jsp에서 view 화면 보여주지 않음(@ResponseBody 어노테이션 삭제)
+
+    d. Model에 값을 담아서 넣는 방법
+        - Controller Parameter에 Model model 추가 후  model.addAttribute("이름", 값); 로 추가하면 됨
+        
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
