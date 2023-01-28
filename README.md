@@ -112,6 +112,14 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
 	e. application.properties Setting(jsp)
 		- spring.mvc.view.prefix=/WEB-INF/views/
 		- spring.mvc.view.suffix=.jsp
+		
+   [2023-01-28]
+    a. application.properties Setting(Oracle DB Connection)
+	    spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+		spring.datasource.url=jdbc:oracle:thin:@localhost:1521
+		spring.datasource.username=SYSTEM
+		spring.datasource.password=PASSWORD
+	
             
             
 ## 💡 Web Knowledge
