@@ -110,7 +110,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
 			* 꼭 지운 header, footer 위치에서 import 해줘야함
 	
 	e. application.properties Setting(jsp)
-		- spring.mvc.view.prefix=/WEB-INF/views/
+		- spring.mvc.view.prefix=/WEB-INF/views
 		- spring.mvc.view.suffix=.jsp
 		
    [2023-01-28]
@@ -119,9 +119,23 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
 		spring.datasource.url=jdbc:oracle:thin:@localhost:1521
 		spring.datasource.username=SYSTEM
 		spring.datasource.password=PASSWORD
-	
-            
-            
+		
+	[2023-01-29]
+	a. ★ DB 흐름 ★
+ 	    - Service > DAO > Mapper > DB
+		    - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
+				* Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
+				
+	b. Service package, DAO package, Mapper package 생성
+	    a. /src/main/java/com/spring/boot/dao 
+		    - @Mapper interface로 생성해야함 (class X)
+		b. /src/main/resources/sqlmapper
+		    - XML 파일 생성(DB 쿼리)
+		c. /src/main/java/com/spring/boot/service
+            - @Service, @Autowired(DAO), class로 생성 (interface X)
+		
+        
+
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
 		- HTTP 통신으로 생각
