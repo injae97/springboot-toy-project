@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
+
+<!-- request 부분을 받아야 되기 때문에 Controller-type을 똑같이 받으면 됨 -->
+<%
+	List<Map<String, String>> list = (List<Map<String, String>>) request.getAttribute("list");
+%>
+
 
 <!doctype html>
 <html lang="en">
@@ -16,22 +24,17 @@
   
     <!-- grid -->  
     <div class="container">
+		<% for(Map<String, String> map: list) { %>
         <div class="row mb-3">
-            <div class="col">No</div>
-            <div class="col">공부일자</div>
-            <div class="col">공부내용</div>
-            <div class="col">등록일자</div>
+            <div class="col"><%= map.get("KEY_ID") %></div>
+            <div class="col"><%= map.get("STUDY_DAY") %></div>
+            <div class="col"><%= map.get("CONTENTS") %></div>
+            <div class="col"><%= map.get("REG_DAY") %></div>
         </div>
+        <% } %>
 
         <div class="row mb-3">
-            <div class="col">No</div>
-            <div class="col">공부일자</div>
-            <div class="col">공부내용</div>
-            <div class="col">등록일자</div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">No</div>
+            <div class="col">No(MODEL)</div>
             <div class="col">공부일자</div>
             <div class="col">공부내용</div>
             <div class="col">등록일자</div>

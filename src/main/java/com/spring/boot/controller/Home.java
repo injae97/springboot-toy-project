@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,9 +33,9 @@ public class Home {
 		return "/home/home";
 	}
 	
+	/* @ResponseBody 사용할 경우 jsp에서 view 화면 보여주지 않음 */
 	@GetMapping("/record")
-	@ResponseBody
-	public String dorecord() {
+	public String dorecord(HttpServletRequest request, Model model) {
 		List<Map<String, String>> list = new ArrayList<>();
 		list = studyService.doStudyList();
 		
@@ -42,7 +45,10 @@ public class Home {
 		    System.out.println(map.get("CONTENTS"));
 		    System.out.println(map.get("REG_DAY"));
 		}		
-		return "---";
+		
+		// request.setAttribute("list", list); -> request에서 담는 방법
+	    model.addAttribute("list", list); // 모델에 담는 방법
+		return "/home/record"; // return은 forward이기 때문에 request로 보낸 값을 보냄
 	}
 	
 	@GetMapping("/member_list")
