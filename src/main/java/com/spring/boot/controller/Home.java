@@ -11,9 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.boot.service.StudyService;
+import com.spring.boot.vo.Vo_record;
 
 @Controller
 @RequestMapping("/home")
@@ -33,7 +33,9 @@ public class Home {
 		return "/home/home";
 	}
 	
-	/* @ResponseBody 사용할 경우 jsp에서 view 화면 보여주지 않음 */
+	/*
+	 *  @ResponseBody 사용할 경우 jsp에서 view 화면 보여주지 않음 
+	 *  return type : Map
 	@GetMapping("/record")
 	public String dorecord(HttpServletRequest request, Model model) {
 		List<Map<String, String>> list = new ArrayList<>();
@@ -48,6 +50,27 @@ public class Home {
 		
 		// request.setAttribute("list", list); -> request에서 담는 방법
 	    model.addAttribute("list", list); // 모델에 담는 방법
+		return "/home/record"; // return은 forward이기 때문에 request로 보낸 값을 보냄
+	}
+	 */
+	
+	/*  return type : VO 객체 */ 
+	@GetMapping("/record")
+	public String dorecord(HttpServletRequest request, Model model) {
+		List<Vo_record> list = new ArrayList<>();
+		list = studyService.doStudyList();
+		
+		/* Getter & Setter 사용 */
+		System.out.println("Vo_record");
+		for(Vo_record vo_record : list) {
+		    System.out.println(vo_record.getKEY_ID());
+		    System.out.println(vo_record.getSTUDY_DAY());
+		    System.out.println(vo_record.getCONTENTS());
+		    System.out.println(vo_record.getREG_DAY());
+		}		
+		
+		 request.setAttribute("list", list); // request에서 담는 방법
+	    // model.addAttribute("list", list); // 모델에 담는 방법
 		return "/home/record"; // return은 forward이기 때문에 request로 보낸 값을 보냄
 	}
 	
