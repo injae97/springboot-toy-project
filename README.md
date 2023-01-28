@@ -186,19 +186,19 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             </div>
             <% } %>
             * STS에서 Syntax error on token ")", delete this token 해당 에러 무시 
-	
-	f. Lombok 사용
-		- https://mvnrepository.com/artifact/org.projectlombok/lombok/1.18.24	
-		a. pom.xml(dependency 추가)
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
-				<scope>provided</scope>
-			</dependency>
-		b. Vo class file 수정
-		    - @Data : @Getter, @Setter , @RequiredArgsConstructor(@Data 어노테이션에 @Getter, @Setter, @RequiredArgsConstructor 3개가 내장되어 있음)
-		* DocumentSite: https://projectlombok.org/
-			
+    
+    f. Lombok 사용
+        - https://mvnrepository.com/artifact/org.projectlombok/lombok/1.18.24    
+        a. pom.xml(dependency 추가)
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <scope>provided</scope>
+            </dependency>
+        b. Vo class file 수정
+            - @Data : @Getter, @Setter , @RequiredArgsConstructor(@Data 어노테이션에 @Getter, @Setter, @RequiredArgsConstructor 3개가 내장되어 있음)
+        * DocumentSite: https://projectlombok.org/
+            
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
