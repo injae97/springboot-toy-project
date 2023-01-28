@@ -101,95 +101,95 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
         * 화면단(view jsp file)에서 버튼 클릭시 링크대로 이동하게 수정
             - 자바단(Controller)에서 RequestMapping 와 GetMapping을 적절하게 사용
                - 그런 후 컨트롤러에 설정한 값대로 각 화면단 jsp 파일의 href 수정
-	
-	d. 공통 헤더 분리 후 import
-	    - /src/main/webapp/WEB-INF/views/common/ (header.jsp, footer.jsp)
+    
+    d. 공통 헤더 분리 후 import
+        - /src/main/webapp/WEB-INF/views/common/ (header.jsp, footer.jsp)
         - 각 화면단(jsp) 파일들에서 header, footer 부분을 지우고 공통 헤더 부분을 import
-		   	<%@ include file="/WEB-INF/views/common/header.jsp" %>
-        	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
-			* 꼭 지운 header, footer 위치에서 import 해줘야함
-	
-	e. application.properties Setting(jsp)
-		- spring.mvc.view.prefix=/WEB-INF/views
-		- spring.mvc.view.suffix=.jsp
-		
-   [2023-01-28]
+               <%@ include file="/WEB-INF/views/common/header.jsp" %>
+            <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+            * 꼭 지운 header, footer 위치에서 import 해줘야함
+    
+    e. application.properties Setting(jsp)
+        - spring.mvc.view.prefix=/WEB-INF/views
+        - spring.mvc.view.suffix=.jsp
+        
+    [2023-01-28]
     a. application.properties Setting(Oracle DB Connection)
-	    spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
-		spring.datasource.url=jdbc:oracle:thin:@localhost:1521
-		spring.datasource.username=SYSTEM
-		spring.datasource.password=PASSWORD
-		
-	[2023-01-29]
-	a. ★ DB 흐름 ★
- 	    - Service > DAO > Mapper > DB
-		    - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
-				* Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
-				
-	b. Service package, DAO package, Mapper package 생성
-	    a. /src/main/java/com/spring/boot/dao 
-		    - @Mapper interface로 생성해야함 (class X)
-		b. /src/main/resources/sqlmapper
-		    - XML 파일 생성(DB 쿼리)
-		c. /src/main/java/com/spring/boot/service
+        spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+        spring.datasource.url=jdbc:oracle:thin:@localhost:1521
+        spring.datasource.username=SYSTEM
+        spring.datasource.password=PASSWORD
+        
+    [2023-01-29]
+    a. ★ DB 흐름 ★
+         - Service > DAO > Mapper > DB
+            - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
+                * Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
+                
+    b. Service package, DAO package, Mapper package 생성
+        a. /src/main/java/com/spring/boot/dao 
+            - @Mapper interface로 생성해야함 (class X)
+        b. /src/main/resources/sqlmapper
+            - XML 파일 생성(DB 쿼리)
+        c. /src/main/java/com/spring/boot/service
             - @Service, @Autowired(DAO), class로 생성 (interface X)
-		
+        
         
 
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
-		- HTTP 통신으로 생각
-		- forward(request): forward는 request를 계속적으로 던져주는 것 (WAS 내부에서만 요청자가 입력한 값을 던져줌)
-		- sendRedirect(response): response를 다시 다른 곳으로 넘겨주는 것
-		
-		a. forward(request)  = Spring return "view path"
-			- /WEB-INF/views/*.jsp (호출 성공)
-			- /jsp/*.jsp (호출 성공)
-			- https://www.naver.com (호출 실패 - Error)
-			* 구조 : 요청자(Client) > request > localhost[WAS] Call > WEB-INF/views/list.jsp        
-					
-		b. sendRedirect(response) = Spring redirect:/path 
-			- /WEB-INF/views/*.jsp (호출 실패 - Error)
-				- response는 요청자로 보내줘야하는데 자기 일 끝났다고 요청자 말고 직접 호출시킴(그래서 외부 접속이 됨)
-			- /jsp/*.jsp (호출 성공)
-			- https://www.naver.com (호출 성공)
+        - HTTP 통신으로 생각
+        - forward(request): forward는 request를 계속적으로 던져주는 것 (WAS 내부에서만 요청자가 입력한 값을 던져줌)
+        - sendRedirect(response): response를 다시 다른 곳으로 넘겨주는 것
+        
+        a. forward(request)  = Spring return "view path"
+            - /WEB-INF/views/*.jsp (호출 성공)
+            - /jsp/*.jsp (호출 성공)
+            - https://www.naver.com (호출 실패 - Error)
+            * 구조 : 요청자(Client) > request > localhost[WAS] Call > WEB-INF/views/list.jsp        
+                    
+        b. sendRedirect(response) = Spring redirect:/path 
+            - /WEB-INF/views/*.jsp (호출 실패 - Error)
+                - response는 요청자로 보내줘야하는데 자기 일 끝났다고 요청자 말고 직접 호출시킴(그래서 외부 접속이 됨)
+            - /jsp/*.jsp (호출 성공)
+            - https://www.naver.com (호출 성공)
                 
     * Spring - Controller & RestController 에 대한 기본적인 이해
-		a. Controller
-			@Controller
-			@RequestMapping("URL-PATH")
-			public String doDefault() {
-				return "result"; // result.jsp 화면 렌더링
-			}
-		
-		b. RestController
-			- @Controller + @ResponBody = @RestController
-			
-			/* RestController.class */
-			@RestController
-			public class RestController {
-				@RequestMapping("URL-PATH")
-				public String doResponse() {
-					String strContents = "View : ResponBody!! <HR>  ";
-					return strContents;
-				}
-			}	
+        a. Controller
+            @Controller
+            @RequestMapping("URL-PATH")
+            public String doDefault() {
+                return "result"; // result.jsp 화면 렌더링
+            }
+        
+        b. RestController
+            - @Controller + @ResponBody = @RestController
+            
+            /* RestController.class */
+            @RestController
+            public class RestController {
+                @RequestMapping("URL-PATH")
+                public String doResponse() {
+                    String strContents = "View : ResponBody!! <HR>  ";
+                    return strContents;
+                }
+            }    
 
-		* HTTPServletResponse
-			- java에서 jsp를 만든 것
-			response.setContentType("text/html");
-			response.setCharacterEncoding("utf-8");
-			PrintWriter out = response.getWriter();
-			out.println("<html><body>");
-			out.println(" View : response Self");
-			out.println("</body></html>");
-			
-		* @ResponBody
-			@RequestMapping("URL-PATH")
-			@ResponBody
-			public String useResponsebody() {
-				String strContents = "View : ResponBody!! ";
-				return strContents;
-			}
-			
-		* HTTPServletResponse 소스코드와 @ResponBody 안에 있는 소스코드와 동일
+        * HTTPServletResponse
+            - java에서 jsp를 만든 것
+            response.setContentType("text/html");
+            response.setCharacterEncoding("utf-8");
+            PrintWriter out = response.getWriter();
+            out.println("<html><body>");
+            out.println(" View : response Self");
+            out.println("</body></html>");
+            
+        * @ResponBody
+            @RequestMapping("URL-PATH")
+            @ResponBody
+            public String useResponsebody() {
+                String strContents = "View : ResponBody!! ";
+                return strContents;
+            }
+            
+        * HTTPServletResponse 소스코드와 @ResponBody 안에 있는 소스코드와 동일
