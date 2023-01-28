@@ -156,6 +156,37 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
     d. Model에 값을 담아서 넣는 방법
         - Controller Parameter에 Model model 추가 후  model.addAttribute("이름", 값); 로 추가하면 됨
         
+    e. VO package 생성
+        a. /src/main/java/com/spring/boot/vo
+            - Vo_record(class로 생성)        
+            - VO는 DB Table의 컬럼값들을 선언해준다고 생각하면 된다.
+        b. Mapper resultType 수정
+            <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">        
+        c. Dao 수정(VO 객체에 접근하기 위해 type 수정)
+            - public List<Vo_record> doStudyList(); // VO 객체로 반환
+        d. StudyService(VO 객체에 접근하기 위해 type 수정)
+            - public List<Vo_record> doStudyList()
+            - List<Vo_record> list = new ArrayList<>();
+        e. Controller 수정(VO 객체에 접근하기 위해 type 수정)
+            - List<Vo_record> list = new ArrayList<>();
+            - for(Vo_record vo_record : list) 
+                - Getter & Setter 사용(vo_record.getKEY_ID())
+        f. JSP 수정
+            <%@page import="com.spring.boot.vo.Vo_record"%>
+            <%
+                List<Vo_record> list = (List<Vo_record>) request.getAttribute("list");
+            %>
+            
+            <% for(Vo_record vo_record : list) { %>
+            <div class="row mb-3">
+                <div class="col"><%= vo_record.getKEY_ID() %></div>
+                <div class="col"><%= vo_record.getSTUDY_DAY() %></div>
+                <div class="col"><%= vo_record.getCONTENTS() %></div>
+                <div class="col"><%= vo_record.getREG_DAY() %></div>
+            </div>
+            <% } %>
+            * STS에서 Syntax error on token ")", delete this token 해당 에러 무시 
+        
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
