@@ -371,6 +371,65 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 log.info(vo_record.getContents());
                 log.info(vo_record.getRegDay());
         
+        
+## 💡 게시판(CRUD) - 18:40 / 1:04:08
+    a. 화면단 - 수정, 삭제 버튼 추가(record.jsp) 
+        <button type="button" onclick="location.href='/record_reg/insert'">게시글 등록</button>
+        
+        * 화면단 - 로직 수정(record.jsp)
+            <div class="col"><a href="/record_reg/modify?key_id=<%= vo_record.getKeyId() %>">수정</a></div>
+            <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div>
+        
+    b. 수정 화면 페이지 생성
+        - /src/main/webapp/WEB-INF/views/record/record_modify.jsp
+            <!-- 게시글 수정화면 페이지 -->
+            <!-- VO객체를 보면서 사용(name = VO 객체 컬럼들) -->
+            <form name="form_record_mod" action="/record/modify_exe" method="post">
+                <div>keyId: <input type="text" name="keyId"></div><br>
+                <div>StudyDay: <input type="text" name="StudyDay"></div><br>
+                <div>Contents: <input type="text" name="contents"></div><p>
+                
+                <br><input type="submit" value="게시글 수정"> 
+            </form>
+        
+    c. Controller 생성
+        - /src/main/java/com/spring/boot/controller/record_reg.java 
+            package com.spring.boot.controller;
+
+            import javax.servlet.http.HttpServletRequest;
+
+            import org.springframework.stereotype.Controller;
+            import org.springframework.web.bind.annotation.GetMapping;
+            import org.springframework.web.bind.annotation.RequestMapping;
+
+            @Controller
+            @RequestMapping("record_reg")
+            public class record_reg {
+
+                /* Insert(등록) 
+                 * 입력이 a tag Mapping으로 들어왔기 때문에 GetMapping
+                 */
+                @GetMapping("/insert")
+                public String doInsert() {
+                    return "";
+                }
+                
+                
+                /* Upate(수정) */
+                @GetMapping("/modify")
+                public String doModify(HttpServletRequest request) {
+                    String strKeyId = request.getParameter("key_id");
+                    return "/record/record_modify";
+                }
+                
+                
+                /* Delete(삭제) */
+                @GetMapping("/delete")
+                public String doDelete() {
+                    return "";
+                }
+            }
+        
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
