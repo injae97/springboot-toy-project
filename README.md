@@ -301,7 +301,44 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                     <div class="col"><%= vo_record.getRegDay() %></div>
                 </div>
                 <% } %>
-            
+                
+    i. YAML(application.yml)
+        - 사람이 쉽게 읽을 수 있는 데이터 직렬화 양식
+        * application.yml
+            --- # port setting
+            server:
+                port: 8090
+
+            --- # Spring MVC view
+            spring:
+                mvc:
+                    view:
+                        prefix: /WEB-INF/views
+                        suffix: .jsp
+
+            --- # devtools reload(html, jsp)
+            spring:
+                devtools:
+                    livereload:
+                        enable: true 
+                    restart:
+                        enabled: false
+
+            --- # Oracle
+            spring:
+                datasource:
+                    driver-class-name: oracle.jdbc.driver.OracleDriver
+                    url: jdbc:oracle:thin:@localhost:1521
+                    username: SYSTEM
+                    password: PASSWORD
+             
+            --- # Mybatis
+            mybatis:
+                mapper-locations: classpath:sqlmapper/*.xml
+                configuration.map-underscore-to-camel-case: true
+        
+        
+        
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
