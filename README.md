@@ -204,17 +204,45 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             - @Data : @Getter, @Setter , @RequiredArgsConstructor(@Data 어노테이션에 @Getter, @Setter, @RequiredArgsConstructor 3개가 내장되어 있음)
         * DocumentSite: https://projectlombok.org/
         
-    g. resultMap, mapUnderscoreToCamelCase
-        a. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기능)
-            a. resultMap의 column값과 property에 지정한 값을 매핑할 수 있다.
-                e.g VO 객체 컬럼에서 별칭을 사용해야한다면? resultMap을 사용하면된다.(기존 VO 값: study_day -> 별칭 사용할 컬럼 값:study_day20)
-                * column은 VO객체 DB연결한 쿼리에서의 컬럼들이다.
-                * column에서 지정한 값과 property에 지정한 값을 매핑 해준다를 뜻함.
-                
-            b. <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study"></resultMap>
-                a. id는 VO 객체 DB연결한 쿼리 <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record" resultMap="map_vo_study">    에서 resultMap="" 값을 resultMap id에 적어줌
-                b. resultMap type은 VO 객체 DB연결한 쿼리에서 resultType 그대로 복사 한 후 resultMap type에 넣어주면 된다. 
-             
+    g. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기능)
+        a. resultMap의 column값과 property에 지정한 값을 매핑할 수 있다.
+            e.g VO 객체 컬럼에서 별칭을 사용해야한다면? resultMap을 사용하면된다.(기존 VO 값: study_day -> 별칭 사용할 컬럼 값:study_day20)
+            * column은 VO객체 DB연결한 쿼리에서의 컬럼들이다.
+            * column에서 지정한 값과 property에 지정한 값을 매핑 해준다를 뜻함.
+            
+        b. <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study"></resultMap>
+            a. id는 VO 객체 DB연결한 쿼리 <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record" resultMap="map_vo_study">    에서 resultMap="" 값을 resultMap id에 적어줌
+            b. resultMap type은 VO 객체 DB연결한 쿼리에서 resultType 그대로 복사 한 후 resultMap type에 넣어주면 된다. 
+         
+            <!-- Mybatis(resultMap) -->
+            <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study">
+                <result column="key_id" property="key_id" jdbcType="NVARCHAR" javaType="String" />
+                <result column="study_day" property="study_day" jdbcType="NVARCHAR" javaType="String" />
+                <result column="contents" property="contents" jdbcType="NVARCHAR" javaType="String" />
+                <result column="reg_day" property="reg_day" jdbcType="NVARCHAR" javaType="String" />
+            </resultMap>
+            
+            <!-- VO 객체 연결 -->
+            <select id="doStudyList" resultMap="map_vo_study">        
+                SELECT to_char(key_id) AS key_id, study_day AS study_day20, contents AS contents20, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+                FROM Study_record
+            </select>
+            
+            * https://mybatis.org/mybatis-3/configuration.html (typeHandlers)
+            * https://mybatis.org/mybatis-3/sqlmap-xml.html
+        
+        c. VO, Controller, Mapper, jsp 파일 수정
+            a. VO 
+                private String key_id;
+                private String study_day;
+                private String contents;
+                private String reg_day;
+            b. Controller
+                System.out.println(vo_record.getKey_id());
+                System.out.println(vo_record.getStudy_day());
+                System.out.println(vo_record.getContents());
+                System.out.println(vo_record.getReg_day());
+            c. Mapper
                 <!-- Mybatis(resultMap) -->
                 <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study">
                     <result column="key_id" property="key_id" jdbcType="NVARCHAR" javaType="String" />
@@ -225,83 +253,54 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 
                 <!-- VO 객체 연결 -->
                 <select id="doStudyList" resultMap="map_vo_study">        
-                    SELECT to_char(key_id) AS key_id, study_day AS study_day20, contents AS contents20, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+                    SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
                     FROM Study_record
                 </select>
+            d. jsp 
+                <!-- returnType : VO 객체  -->
+                <% for(Vo_record vo_record : list) { %>
+                <div class="row mb-3">
+                    <div class="col"><%= vo_record.getKey_id() %></div>
+                    <div class="col"><%= vo_record.getStudy_day() %></div>
+                    <div class="col"><%= vo_record.getContents() %></div>
+                    <div class="col"><%= vo_record.getReg_day() %></div>
+                </div>
+            <% } %>
                 
-                * https://mybatis.org/mybatis-3/configuration.html (typeHandlers)
-                * https://mybatis.org/mybatis-3/sqlmap-xml.html
+    h. mapUnderscoreToCamelCase(실무에서 거의 사용)        
+        - 언더바 뒤에 첫글자는 대문자로 표기
+            e.g key_id -> keyId
             
-            c. VO 파일, Controller, Mapper, jsp 파일들 수정
-                a. VO 
-                    private String key_id;
-                    private String study_day;
-                    private String contents;
-                    private String reg_day;
-                b. Controller
-                    System.out.println(vo_record.getKey_id());
-                    System.out.println(vo_record.getStudy_day());
-                    System.out.println(vo_record.getContents());
-                    System.out.println(vo_record.getReg_day());
-                c. Mapper
-                    <!-- Mybatis(resultMap) -->
-                    <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study">
-                        <result column="key_id" property="key_id" jdbcType="NVARCHAR" javaType="String" />
-                        <result column="study_day" property="study_day" jdbcType="NVARCHAR" javaType="String" />
-                        <result column="contents" property="contents" jdbcType="NVARCHAR" javaType="String" />
-                        <result column="reg_day" property="reg_day" jdbcType="NVARCHAR" javaType="String" />
-                    </resultMap>
-                    
-                    <!-- VO 객체 연결 -->
-                    <select id="doStudyList" resultMap="map_vo_study">        
-                        SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
-                        FROM Study_record
-                    </select>
-                d. jsp 
-                    <!-- returnType : VO 객체  -->
-                    <% for(Vo_record vo_record : list) { %>
-                    <div class="row mb-3">
-                        <div class="col"><%= vo_record.getKey_id() %></div>
-                        <div class="col"><%= vo_record.getStudy_day() %></div>
-                        <div class="col"><%= vo_record.getContents() %></div>
-                        <div class="col"><%= vo_record.getReg_day() %></div>
-                    </div>
+        a. application.properties Setting
+            - mybatis.configuration.map-underscore-to-camel-case=true
+                            
+        b. VO, Controller, Mapper, jsp 파일 수정
+            a. VO 
+                private String keyId;
+                private String studyDay;
+                private String contents;
+                private String regDay;
+            b. Controller
+                System.out.println(vo_record.getKeyId());
+                System.out.println(vo_record.getStudyDay());
+                System.out.println(vo_record.getContents());
+                System.out.println(vo_record.getRegDay());
+            c. Mapper
+                <!-- VO객체 DB연결(mapUnderscoreToCamelCase) -->
+                <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">        
+                    SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+                    FROM Study_record
+                </select>
+            d. jsp 
+                <!-- mapUnderscoreToCamelCase : VO 객체  -->
+                <% for(Vo_record vo_record : list) { %>
+                <div class="row mb-3">
+                    <div class="col"><%= vo_record.getKeyId() %></div>
+                    <div class="col"><%= vo_record.getStudyDay() %></div>
+                    <div class="col"><%= vo_record.getContents() %></div>
+                    <div class="col"><%= vo_record.getRegDay() %></div>
+                </div>
                 <% } %>
-                
-        b. mapUnderscoreToCamelCase(실무에서 거의 사용)        
-            - 언더바 뒤에 첫글자는 대문자로 표기
-                e.g key_id -> keyId
-                
-            a. application.properties Setting
-                - mybatis.configuration.map-underscore-to-camel-case=true
-                                
-            b. VO 파일, Controller, Mapper, jsp 파일들 수정
-                a. VO 
-                    private String keyId;
-                    private String studyDay;
-                    private String contents;
-                    private String regDay;
-                b. Controller
-                    System.out.println(vo_record.getKeyId());
-                    System.out.println(vo_record.getStudyDay());
-                    System.out.println(vo_record.getContents());
-                    System.out.println(vo_record.getRegDay());
-                c. Mapper
-                    <!-- VO객체 DB연결(mapUnderscoreToCamelCase) -->
-                    <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">        
-                        SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
-                        FROM Study_record
-                    </select>
-                d. jsp 
-                    <!-- mapUnderscoreToCamelCase : VO 객체  -->
-                    <% for(Vo_record vo_record : list) { %>
-                    <div class="row mb-3">
-                        <div class="col"><%= vo_record.getKeyId() %></div>
-                        <div class="col"><%= vo_record.getStudyDay() %></div>
-                        <div class="col"><%= vo_record.getContents() %></div>
-                        <div class="col"><%= vo_record.getRegDay() %></div>
-                    </div>
-                    <% } %>
             
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
