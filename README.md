@@ -127,7 +127,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
         
     [2023-01-29]
     a. ★ DB 흐름 ★
-         - Service > DAO > Mapper > DB
+         - Controller> Service > DAO > Mapper > DB
             - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
                 * Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
                 
@@ -215,12 +215,12 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             * column은 VO객체 DB연결한 쿼리에서의 컬럼들이다.
             * column에서 지정한 값과 property에 지정한 값을 매핑 해준다를 뜻함.
             
-        b. <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study"></resultMap>
-            a. id는 VO 객체 DB연결한 쿼리 <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record" resultMap="map_vo_study">    에서 resultMap="" 값을 resultMap id에 적어줌
+        b. <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_record"></resultMap>
+            a. id는 VO 객체 DB연결한 쿼리 <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record" resultMap="map_vo_record">    에서 resultMap="" 값을 resultMap id에 적어줌
             b. resultMap type은 VO 객체 DB연결한 쿼리에서 resultType 그대로 복사 한 후 resultMap type에 넣어주면 된다. 
          
             <!-- Mybatis(resultMap) -->
-            <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study">
+            <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_record">
                 <result column="key_id" property="key_id" jdbcType="NVARCHAR" javaType="String" />
                 <result column="study_day" property="study_day" jdbcType="NVARCHAR" javaType="String" />
                 <result column="contents" property="contents" jdbcType="NVARCHAR" javaType="String" />
@@ -228,7 +228,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             </resultMap>
             
             <!-- VO 객체 연결 -->
-            <select id="doStudyList" resultMap="map_vo_study">        
+            <select id="doStudyList" resultMap="map_vo_record">        
                 SELECT to_char(key_id) AS key_id, study_day AS study_day20, contents AS contents20, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
                 FROM Study_record
             </select>
@@ -249,7 +249,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 System.out.println(vo_record.getReg_day());
             c. Mapper
                 <!-- Mybatis(resultMap) -->
-                <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study">
+                <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_record">
                     <result column="key_id" property="key_id" jdbcType="NVARCHAR" javaType="String" />
                     <result column="study_day" property="study_day" jdbcType="NVARCHAR" javaType="String" />
                     <result column="contents" property="contents" jdbcType="NVARCHAR" javaType="String" />
@@ -257,7 +257,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 </resultMap>
                 
                 <!-- VO 객체 연결 -->
-                <select id="doStudyList" resultMap="map_vo_study">        
+                <select id="doStudyList" resultMap="map_vo_record">        
                     SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
                     FROM Study_record
                 </select>
@@ -295,6 +295,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">        
                     SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
                     FROM Study_record
+                    ORDER BY key_id
                 </select>
             d. jsp 
                 <!-- mapUnderscoreToCamelCase : VO 객체  -->
@@ -372,64 +373,158 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 log.info(vo_record.getRegDay());
         
         
-## 💡 게시판(CRUD) - 18:40 / 1:04:08
-    a. 화면단 - 수정, 삭제 버튼 추가(record.jsp) 
-        <button type="button" onclick="location.href='/record_reg/insert'">게시글 등록</button>
-        
-        * 화면단 - 로직 수정(record.jsp)
-            <div class="col"><a href="/record_reg/modify?key_id=<%= vo_record.getKeyId() %>">수정</a></div>
-            <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div>
-        
-    b. 수정 화면 페이지 생성
-        - /src/main/webapp/WEB-INF/views/record/record_modify.jsp
-            <!-- 게시글 수정화면 페이지 -->
-            <!-- VO객체를 보면서 사용(name = VO 객체 컬럼들) -->
-            <form name="form_record_mod" action="/record/modify_exe" method="post">
-                <div>keyId: <input type="text" name="keyId"></div><br>
-                <div>StudyDay: <input type="text" name="StudyDay"></div><br>
-                <div>Contents: <input type="text" name="contents"></div><p>
-                
-                <br><input type="submit" value="게시글 수정"> 
-            </form>
-        
-    c. Controller 생성
-        - /src/main/java/com/spring/boot/controller/record_reg.java 
-            package com.spring.boot.controller;
+## 💡 게시판(CRUD) - 29:12 / 1:04:08
+    * 화면단 - 수정, 삭제 버튼 추가(record.jsp) 
+        - /src/main/webapp/WEB-INF/views/home/record.jsp
+            <button type="button" onclick="location.href='/record_reg/insert'">게시글 등록</button>
 
-            import javax.servlet.http.HttpServletRequest;
+            <div class="row mb-3">
+                <div class="col">수정</div>
+                <div class="col">삭제</div>
+            </div>
 
-            import org.springframework.stereotype.Controller;
-            import org.springframework.web.bind.annotation.GetMapping;
-            import org.springframework.web.bind.annotation.RequestMapping;
+            <% for(Vo_record vo_record : list) { %>
+            <div class="row mb-3">
+                <div class="col"><a href="/record_reg/modify?key_id=<%= vo_record.getKeyId() %>">수정</a></div>
+                <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div>
+            </div>
+            <% } %>
+            
+    a. [UPDATE] ★ DB 흐름 ★
+        - Controller > Service > DAO > Mapper > DB
+            - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
+                * Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
+                                
+        a. Controller
+            - @Autowired를 사용해서 Service를 주입해줘야 한다.(StudyService)
+            - /src/main/java/com/spring/boot/controller/record_reg.java  
+                package com.spring.boot.controller;
 
-            @Controller
-            @RequestMapping("record_reg")
-            public class record_reg {
+                import javax.servlet.http.HttpServletRequest;
 
-                /* Insert(등록) 
-                 * 입력이 a tag Mapping으로 들어왔기 때문에 GetMapping
-                 */
-                @GetMapping("/insert")
-                public String doInsert() {
-                    return "";
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.stereotype.Controller;
+                import org.springframework.web.bind.annotation.GetMapping;
+                import org.springframework.web.bind.annotation.RequestMapping;
+
+                import com.spring.boot.service.StudyService;
+                import com.spring.boot.vo.Vo_record;
+
+                @Controller
+                @RequestMapping("record_reg")
+                public class record_reg {
+
+                    /* @Autowired: 서비스 주입 */
+                    @Autowired
+                    StudyService studyService;    
+                    
+                    /* Insert(등록) 
+                     * 입력이 a tag Mapping으로 들어왔기 때문에 GetMapping
+                     */
+                    @GetMapping("/insert")
+                    public String doInsert() {
+                        return "";
+                    }
+                                
+                    /* [UPDATE](수정) */
+                    @GetMapping("/modify")
+                    public String doModify(HttpServletRequest request) {
+                        String strKeyId = request.getParameter("key_id");
+                        
+                        Vo_record vo_record = new Vo_record();
+                        vo_record = studyService.doStudyListOne(strKeyId); // 인자 값을 strKeyId로 던져줌        
+                        request.setAttribute("vo_record", vo_record); // request에서 vo_record 값을 담아서 저장
+                        
+                        return "/record/record_modify";
+                    }            
+                    
+                    /* Delete(삭제) */
+                    @GetMapping("/delete")
+                    public String doDelete() {
+                        return "";
+                    }
+                }
+
+        b. Service
+            - /src/main/java/com/spring/boot/service/StudyService.java
+                package com.spring.boot.service;
+                import java.util.ArrayList;
+                import java.util.List;
+                import java.util.Map;
+
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.stereotype.Service;
+
+                import com.spring.boot.dao.StudyDao;
+                import com.spring.boot.vo.Vo_record;
+
+                @Service
+                public class StudyService {
+                    
+                    @Autowired
+                    StudyDao studyDao;
+                    
+                    /* 
+                     * returnType : VO
+                     */                    
+                    public List<Vo_record> doStudyList() {
+                        List<Vo_record> list = new ArrayList<>();
+                        list = studyDao.doStudyList();
+                        return list;
+                    }
+                            
+                    /*
+                     * [UPDATE]                    
+                     * returnType : VO
+                     */
+                    public Vo_record doStudyListOne(String strKeyId) {
+                        Vo_record vo_record = new Vo_record();
+                        vo_record = studyDao.doStudyListOne(strKeyId); // strKeyId 값을 그대로 전달
+                        return vo_record;
+                    }
                 }
                 
-                
-                /* Upate(수정) */
-                @GetMapping("/modify")
-                public String doModify(HttpServletRequest request) {
-                    String strKeyId = request.getParameter("key_id");
-                    return "/record/record_modify";
+        c. DAO
+            - /src/main/java/com/spring/boot/dao/StudyDao.java
+                package com.spring.boot.dao;
+
+                import java.util.List;
+
+                import org.apache.ibatis.annotations.Mapper;
+                import com.spring.boot.vo.Vo_record;
+
+                @Mapper
+                public interface StudyDao {
+                    
+                    // public List<Map<String, String>> doStudyList(); // Mapper(resultType = map)
+                    public List<Vo_record> doStudyList(); // 기록 전체 리스트: VO 객체로 반환
+            
+                    public Vo_record doStudyListOne(String strKeyId); // [UPDATE] 기록 One row: VO 객체로 반환(strKeyId 값을 그대로 전달)    
                 }
                 
-                
-                /* Delete(삭제) */
-                @GetMapping("/delete")
-                public String doDelete() {
-                    return "";
-                }
-            }
+        d. Mapper
+            <!-- VO객체 DB연결([UPDATE] doStudyListOne(one row select)) -->
+            <select id="doStudyListOne" resultType="com.spring.boot.vo.Vo_record">        
+                SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+                FROM Study_record
+                WHERE key_id = #{strKeyId}
+            </select>
         
+        e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
+            - /src/main/webapp/WEB-INF/views/record/record_modify.jsp    
+                <%
+                    Vo_record vo_record = (Vo_record) request.getAttribute("vo_record");
+                %>
+                <!-- 게시글 수정화면 페이지 -->
+                <!-- VO객체를 보면서 사용(name = VO 객체 컬럼들) -->
+                <form name="form_record_mod" action="/record/modify_exe" method="post">
+                    <div>keyId: <input type="text" name="keyId" value="<%=vo_record.getKeyId()%>" readonly></div><br>
+                    <div>StudyDay: <input type="text" name="StudyDay" value="<%=vo_record.getStudyDay()%>"></div><br>
+                    <div>Contents: <input type="text" name="contents" value="<%=vo_record.getContents()%>" size="80"></div><p>
+                
+                    <br><input type="submit" value="게시글 수정">   
+                </form>
+                
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
