@@ -29,7 +29,17 @@
   
     <!-- grid -->  
     <div class="container">
+		<button type="button" onclick="location.href='/record_reg/insert'">게시글 등록</button>
     
+        <div class="row mb-3">
+	        <div class="col">No</div>
+	        <div class="col">공부일자</div>
+	        <div class="col">공부내용</div>
+	        <div class="col">등록일자</div>
+	        <div class="col">수정</div>
+	        <div class="col">삭제</div>
+        </div>
+        
 		<%--  return type : Map  		
 		<% for(Map<String, String> map: list) { %>
         <div class="row mb-3">
@@ -59,15 +69,11 @@
             <div class="col"><%= vo_record.getStudyDay() %></div>
             <div class="col"><%= vo_record.getContents() %></div>
             <div class="col"><%= vo_record.getRegDay() %></div>
+            <div class="col"><a href="/record_reg/modify?key_id=<%= vo_record.getKeyId() %>">수정</a></div>
+            <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div>
         </div>
         <% } %>
-
-        <div class="row mb-3">
-            <div class="col">No(CamelStyle)</div>
-            <div class="col">공부일자</div>
-            <div class="col">공부내용</div>
-            <div class="col">등록일자</div>
-        </div>
+        
     </div>
     <!-- grid --> 
     
