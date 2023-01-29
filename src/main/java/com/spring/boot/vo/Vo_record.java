@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class Vo_record {
 	
-	private String KEY_ID;
-	private String STUDY_DAY;
-	private String CONTENTS;
-	private String REG_DAY;
+	private String keyId;
+	private String studyDay;
+	private String contents;
+	private String regDay;
 		
 	/* 
 	// Constructor

@@ -8,17 +8,40 @@
 <!-- 해당 메서드의 type은 Map -->
 <mapper namespace="com.spring.boot.dao.StudyDao">
 
-	 <!--
+	 <!-- Map
      <select id="doStudyList_NOTUSE" resultType="map">	    
 	    SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
 	    FROM Study_record
     </select> 
     -->
+
+    <!-- VO객체 DB연결(Map) 
+	<select id="doStudyList" resultType="com.spring.boot.vo.Vo_record" resultMap="map_vo_study">	    
+	    SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+	    FROM Study_record
+    </select> 
+    -->
     
-    <!-- VO 객체 연결 -->
+    
+	<!-- VO객체 DB연결(resultMap)
+    <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_study">
+        <result column="key_id" property="key_id" jdbcType="NVARCHAR" javaType="String" />
+        <result column="study_day20" property="study_day" jdbcType="NVARCHAR" javaType="String" />
+        <result column="contents20" property="contents" jdbcType="NVARCHAR" javaType="String" />
+        <result column="reg_day" property="reg_day" jdbcType="NVARCHAR" javaType="String" />
+    </resultMap>
+    
+    <select id="doStudyList" resultMap="map_vo_study">	    
+	    SELECT to_char(key_id) AS key_id, study_day AS study_day20, contents AS contents20, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+	    FROM Study_record
+    </select> 
+    -->
+    
+        
+    <!-- VO객체 DB연결(mapUnderscoreToCamelCase) -->
     <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">	    
 	    SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
 	    FROM Study_record
     </select>
-    
+        
 </mapper>

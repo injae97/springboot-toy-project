@@ -41,18 +41,29 @@
         <% } %> 
         --%>
 		
-		<!-- returnType : VO 객체  -->
+		<%-- returnType : VO 객체  -->
 		<% for(Vo_record vo_record : list) { %>
         <div class="row mb-3">
-            <div class="col"><%= vo_record.getKEY_ID() %></div>
-            <div class="col"><%= vo_record.getSTUDY_DAY() %></div>
-            <div class="col"><%= vo_record.getCONTENTS() %></div>
-            <div class="col"><%= vo_record.getREG_DAY() %></div>
+            <div class="col"><%= vo_record.getKey_id() %></div>
+            <div class="col"><%= vo_record.getStudy_day() %></div>
+            <div class="col"><%= vo_record.getContents() %></div>
+            <div class="col"><%= vo_record.getReg_day() %></div>
+        </div>
+        <% } %> 
+        --%>
+        
+     	<!-- mapUnderscoreToCamelCase : VO 객체  -->
+		<% for(Vo_record vo_record : list) { %>
+        <div class="row mb-3">
+            <div class="col"><%= vo_record.getKeyId() %></div>
+            <div class="col"><%= vo_record.getStudyDay() %></div>
+            <div class="col"><%= vo_record.getContents() %></div>
+            <div class="col"><%= vo_record.getRegDay() %></div>
         </div>
         <% } %>
 
         <div class="row mb-3">
-            <div class="col">No(VO-Lombok use)</div>
+            <div class="col">No(CamelStyle)</div>
             <div class="col">공부일자</div>
             <div class="col">공부내용</div>
             <div class="col">등록일자</div>
