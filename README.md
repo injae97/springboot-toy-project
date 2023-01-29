@@ -26,6 +26,11 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
         
 ## 💡 HOW TO AUTO IMPORT WITH SHORTCUT KEYS?
     - Ctrl + Shift + O
+    
+## 💡 HOW DO AUTOMATICALLY TRANSLATE ENGLISH THROUGH DRAG?
+    - https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?hl=ko
+    - 확장 추가 > 확장 프로그램에서 Google 번역 오른쪽 마우스 > 옵션 > 즉시 팝업을 표시합니다. > 저장
+    - 재부팅 후 영어 문장에 드래그만 한번 해주면 자동으로 번역된 팝업창 나옴
 
 ## 💡 HOW TO IMPORT DEPENDENCIES ON MAVEN? 
     - https://mvnrepository.com/
@@ -336,8 +341,35 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             mybatis:
                 mapper-locations: classpath:sqlmapper/*.xml
                 configuration.map-underscore-to-camel-case: true
+                
+    j. logback
+        - 어떤 쿼리가 나오는지 로그로 찍는 방법
+        a. logback-spring.xml 생성(/src/main/resources/logback-spring.xml)
+            <?xml version="1.0" encoding="UTF-8"?>
+            <configuration>
+                <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+                    <encoder>
+                        <Pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] %-5level %logger{36} - %msg%n</Pattern>
+                    </encoder>
+                </appender>
+
+                <!-- Logback 은 5단계의 로그 레벨을 가진다.
+                    심각도 수준은 off > Error > Warn > Info > Debug > Trace 이다.
+                -->
+                
+                <!-- name은 package 이름 -->
+                <logger name="com.spring.boot" level="Debug"/>
+                <root level="Info">
+                    <appender-ref ref="console"/>
+                </root>
+            </configuration>
         
-        
+        b. Logback(@Slf4j)
+            - Controller에 @Slf4j 추가(System.out.println > log.info())
+                log.info(vo_record.getKeyId());
+                log.info(vo_record.getStudyDay());
+                log.info(vo_record.getContents());
+                log.info(vo_record.getRegDay());
         
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
