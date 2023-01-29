@@ -1,0 +1,32 @@
+create database sbp;
+
+use sbp;
+
+-- DEFAULT 시퀀스 생성 하기
+CREATE SEQUENCE SQ_STUDY_RECORD
+	START WITH 1001
+	INCREMENT BY 1
+	MINVALUE  1
+	MAXVALUE 9999
+	NOCACHE
+	NOCYCLE;
+
+-- 공부 기록 DB 테이블 
+CREATE TABLE study_record (
+	key_id NUMBER(10) DEFAULT SQ_STUDY_RECORD.Nextval, -- AutoIncrement
+	study_day VARCHAR2(8),
+	contents VARCHAR2(100),
+	reg_day DATE,
+	CONSTRAINT pk_sutdy_record PRIMARY KEY(key_id)
+); 
+
+-- 해당 테이블 데이터 삽입
+INSERT INTO STUDY_RECORD(study_day, contents, reg_day)
+VALUES ('20230129', '공부내용2', sysdate);
+
+-- 해당 테이블 데이터 조회
+SELECT * FROM STUDY_RECORD;
+
+COMMIT;
+
+SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY.mm.dd hh24mi') AS reg_day FROM Study_record;
