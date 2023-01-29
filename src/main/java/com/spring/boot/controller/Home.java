@@ -2,7 +2,6 @@ package com.spring.boot.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.spring.boot.service.StudyService;
 import com.spring.boot.vo.Vo_record;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("/home")
 public class Home {
@@ -75,12 +77,12 @@ public class Home {
 		list = studyService.doStudyList();
 		
 		/* Getter & Setter 사용 */
-		System.out.println("Vo_record");
+		log.info("Vo_record");
 		for(Vo_record vo_record : list) {
-		    System.out.println(vo_record.getKeyId());
-		    System.out.println(vo_record.getStudyDay());
-		    System.out.println(vo_record.getContents());
-		    System.out.println(vo_record.getRegDay());
+			log.info(vo_record.getKeyId());
+			log.info(vo_record.getStudyDay());
+			log.info(vo_record.getContents());
+			log.info(vo_record.getRegDay());
 		}		
 		
 		 request.setAttribute("list", list); // request에서 담는 방법
