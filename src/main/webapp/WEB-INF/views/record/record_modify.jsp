@@ -11,7 +11,7 @@
 --%>
 
 <%
-	List<Vo_record> list = (List<Vo_record>) request.getAttribute("list");
+	Vo_record vo_record = (Vo_record) request.getAttribute("vo_record");
 %>
 
 <!doctype html>
@@ -30,9 +30,9 @@
     <!-- 게시글 수정화면 페이지 -->
     <!-- VO객체를 보면서 사용(name = VO 객체 컬럼들) -->
     <form name="form_record_mod" action="/record/modify_exe" method="post">
-        <div>keyId: <input type="text" name="keyId"></div><br>
-        <div>StudyDay: <input type="text" name="StudyDay"></div><br>
-        <div>Contents: <input type="text" name="contents"></div><p>
+        <div>keyId: <input type="text" name="keyId" value="<%=vo_record.getKeyId()%>" readonly></div><br>
+        <div>StudyDay: <input type="text" name="StudyDay" value="<%=vo_record.getStudyDay()%>"></div><br>
+        <div>Contents: <input type="text" name="contents" value="<%=vo_record.getContents()%>" size="80"></div><p>
         
         
         <br><input type="submit" value="게시글 수정"> 

@@ -24,15 +24,25 @@ public class StudyService {
 	}
 	*/
 	
-	
 	/* 
 	 * returnType : VO
 	 */
 	@Autowired
 	StudyDao studyDao;
+	
 	public List<Vo_record> doStudyList() {
 		List<Vo_record> list = new ArrayList<>();
 		list = studyDao.doStudyList();
 		return list;
+	}
+	
+	
+	/* 
+	 * returnType : VO
+	 */
+	public Vo_record doStudyListOne(String strKeyId) {
+		Vo_record vo_record = new Vo_record();
+		vo_record = studyDao.doStudyListOne(strKeyId); // strKeyId 값을 그대로 전달
+		return vo_record;
 	}
 }
