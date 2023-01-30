@@ -29,7 +29,9 @@
     
     <!-- 게시글 수정화면 페이지 -->
     <!-- VO객체를 보면서 사용(name = VO 객체 컬럼들) -->
-    <form name="form_record_mod" action="/record/modify_exe" method="post">
+    <!-- 수정하기 버튼 클릭시 action의 /record_reg/modify_exe로 이동함  -->
+    <!-- ★★★ record_reg.java Controller에서 @RequestMapping("record_reg") + @PostMapping("/modify_exe") 를 더해서 action에 기입 ★★★ -->
+    <form name="form_record_mod" action="/record_reg/modify_exe" method="post">
         <div>keyId: <input type="text" name="keyId" value="<%=vo_record.getKeyId()%>" readonly></div><br>
         <div>StudyDay: <input type="text" name="StudyDay" value="<%=vo_record.getStudyDay()%>"></div><br>
         <div>Contents: <input type="text" name="contents" value="<%=vo_record.getContents()%>" size="80"></div><p>

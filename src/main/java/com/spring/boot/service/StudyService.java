@@ -2,7 +2,6 @@ package com.spring.boot.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,11 +37,23 @@ public class StudyService {
 	
 	
 	/* 
+	 * One Row Select 
 	 * returnType : VO
 	 */
 	public Vo_record doStudyListOne(String strKeyId) {
-		Vo_record vo_record = new Vo_record();
+		Vo_record vo_record = new Vo_record(); 
 		vo_record = studyDao.doStudyListOne(strKeyId); // strKeyId 값을 그대로 전달
 		return vo_record;
+	}
+	
+	
+	/* 
+	 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 VO객체(@ModelAttribute 사용했기 때문에 VO객체로 맞춤)
+	 * 기록 수정(UPDATE)
+	 * UPDATE 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
+	 */
+	public int doStudyUp(Vo_record vo_record) {
+		int intI = studyDao.doStudyUp(vo_record); //  Mybatis - Update는 int형으로 반환
+		return intI;
 	}
 }

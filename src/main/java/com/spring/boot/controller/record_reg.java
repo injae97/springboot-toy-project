@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.spring.boot.service.StudyService;
@@ -26,7 +28,7 @@ public class record_reg {
 		return "";
 	}
 	
-	/* Upate(수정) */
+	/* 수정 화면 페이지(게시글 수정 눌렀을 때 기존 데이터 들고옴) - 고전적인 방식 */
 	@GetMapping("/modify")
 	public String doModify(HttpServletRequest request) {
 		String strKeyId = request.getParameter("key_id");
@@ -38,6 +40,17 @@ public class record_reg {
 		
 		return "/record/record_modify";
 	}
+	
+	/* Upate(수정) - VO 사용 */
+	/* @ModelAttribute: 쿼리 스트링 자동 매핑  */
+	@PostMapping("/modify_exe")
+	public String doModExe(@ModelAttribute Vo_record vo_record) {
+		
+		int intI = studyService.doStudyUp(vo_record); // Mybatis - Update는 int형으로 반환
+				
+		return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
+	}
+	
 	
 	/* Delete(삭제) */
 	@GetMapping("/delete")
