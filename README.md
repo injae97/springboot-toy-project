@@ -373,7 +373,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 log.info(vo_record.getRegDay());
         
         
-## 💡 게시판(CRUD) - 41:52 / 1:04:08
+## 💡 기록(CRUD)
     * CRUD
         a. C(Create) = Insert
         b. R(Read) = Select
