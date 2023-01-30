@@ -687,6 +687,279 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 INSERT INTO Study_record(study_day, contents, reg_day)
                 VALUES (#{studyDay}, #{contents}, SYSDATE) 
             </insert>   
+
+## 💡 회원가입(CRUD)
+    * ★ DB 흐름 ★
+        - Controller > Service > DAO > Mapper > DB
+            - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
+                * Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
+
+    a. VO 객체 생성(class)
+        - /src/main/java/com/spring/boot/vo/Vo_member.java
+            package com.spring.boot.vo;
+
+            import lombok.Data;
+
+            @Data
+            public class Vo_member {
+                
+                /* DB보고 컬럼명을 카멜 케이스로 선언 */
+                private String memberId;
+                private String loginId;
+                private String password;
+                private String name;
+                private String role;
+                private String regDay;
+            }
+    
+    b. DAO 생성(interface)
+        - /src/main/java/com/spring/boot/dao/MemberDao.java
+            package com.spring.boot.dao;
+
+            import java.util.List;
+
+            import org.apache.ibatis.annotations.Mapper;
+
+            import com.spring.boot.vo.Vo_member;
+
+            @Mapper
+            public interface MemberDao {
+                
+                /* 회원 목록 전체 리스트: VO 객체로 반환 */
+                public List<Vo_member> doMemberList(); // public List<Map<String, String>> doStudyList(); ,Mapper(resultType = map)
+                
+                /* 회원 목록 - One row Select: VO 객체로 반환(strKeyId 값을 그대로 전달) */
+                public Vo_member doMemberListOne(String strKeyId); 
+                
+                /* 회원 목록 수정 (UPDATE) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
+                public int doMemberUp(Vo_member vo_record);
+                
+                /* 회원 목록 삭제(DELETE) - 컨트롤러에서 String strKeyId로 받았기 때문에 그대로 사용 */
+                public int doMemberDel(String strKeyId);
+                
+                /* 회원 목록 등록(INSERT) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
+                public int doMemberIns(Vo_member vo_record);
+            }
+            
+    c. Mapper
+        - /src/main/java/com/spring/boot/vo/Vo_member.java
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE mapper
+                    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+            <!-- DB연결을 위한 DAO 파일 경로 지정 -->
+            <!-- id 값은 연결한 DAO파일에서 실행시킬 메서드 이름 -->
+            <!-- DB 테이블 생성 후 해당 컬럼들을 쿼리로 작성 -->
+            <mapper namespace="com.spring.boot.dao.MemberDao">
+                    
+                <!-- Member List (회원 전체 조회)--> 
+                <select id="doMemberList" resultType="com.spring.boot.vo.Vo_member">        
+                    SELECT TO_CHAR(MEMBER_ID) AS MEMBER_ID, LOGIN_ID, NAME, ROLE, TO_CHAR(REG_DAY,'YYYY-mm-dd hh24mi') AS REG_DAY 
+                    FROM STUDY_MEMBER
+                    ORDER BY MEMBER_ID
+                </select>                        
+                
+                <!-- VO객체 DB연결(doMemberListOne - one row select) -->
+                <select id="doMemberListOne" resultType="com.spring.boot.vo.Vo_member">        
+                    SELECT TO_CHAR(MEMBER_ID) AS MEMBER_ID, LOGIN_ID, NAME, ROLE, TO_CHAR(REG_DAY,'YYYY-mm-dd hh24mi') AS REG_DAY 
+                    FROM STUDY_MEMBER
+                    WHERE MEMBER_ID = TO_NUMBER(#{strMemberId})
+                </select>            
+                
+                <!-- [UPDATE] VO객체 수정 > 회원 수정 후 > 수정하기(회원 수정) - doMemberUp -->
+                <!-- VO를 사용하기 때문에 Vo_record.java 선언한 변수명 그대로 값을 사용 -->
+                <update id="doMemberUp" parameterType="com.spring.boot.vo.Vo_member">
+                    UPDATE STUDY_MEMBER
+                    SET NAME = #{NAME}, ROLE = #{ROLE}, REG_DAY = SYSDATE
+                    WHERE MEMBER_ID = TO_NUMBER(#{MEMBER_ID})  
+                </update>
+                
+                <!-- [DELETE] 회원 삭제 - doMemberDel -->
+                <!-- parameterType 사용 안해도 알아서 자동 매핑 해줌(해당 방식을 권장) -->
+                <delete id="doMemberDel">
+                    DELETE FROM STUDY_MEMBER
+                    WHERE MEMBER_ID = TO_NUMBER(#{strMemberId}) 
+                </delete>    
+                
+                <!-- [INSERT] 회원 등록 - doMemberIns -->
+                <!-- parameterType 사용 안해도 알아서 자동 매핑 해줌(해당 방식을 권장) -->
+                <!-- /src/main/java/com/spring/boot/vo/Vo_member.java -->
+                <insert id="doMemberIns">
+                    INSERT INTO STUDY_MEMBER(LOGIN_ID, PASSWORD, NAME, ROLE, REG_DAY)
+                    VALUES (#{loginId}, #{password}, #{name}, #{role}, SYSDATE) 
+                </insert>   
+                
+            </mapper>
+            
+    d. Service
+        - /src/main/java/com/spring/boot/service/MemberService.java
+            package com.spring.boot.service;
+
+            import java.util.ArrayList;
+            import java.util.List;
+
+            import org.springframework.beans.factory.annotation.Autowired;
+            import org.springframework.stereotype.Service;
+
+            import com.spring.boot.dao.MemberDao;
+            import com.spring.boot.vo.Vo_member;
+
+            @Service
+            public class MemberService {
+                    
+                @Autowired
+                MemberDao memberDao;
+                
+                /* 맴버 리스트 - 회원 전체 조회 */
+                public List<Vo_member> doMemberList() {
+                    List<Vo_member> list = new ArrayList<>();
+                    list = memberDao.doMemberList();
+                    return list;
+                }
+                
+                /* 
+                 * One Row Select 
+                 * returnType : VO
+                 */
+                public Vo_member doMemberListOne(String strMemberId) {
+                    Vo_member vo_member = memberDao.doMemberListOne(strMemberId); // strMemberId 값을 그대로 전달
+                    return vo_member;
+                }
+                
+                /* 
+                 * [UPDATE] - 회원 수정
+                 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 VO객체(@ModelAttribute 사용했기 때문에 VO객체로 맞춤)
+                 */
+                public int doMemberUp(Vo_member vo_member) {
+                    int intI = memberDao.doMemberUp(vo_member); // UPDATE는 int형으로 반환
+                    return intI;
+                }
+                
+                /* 
+                 * [DELETE] - 회원 삭제
+                 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 @RequestParam 사용
+                 */    
+                public int doMemberDel(String strMemberId) {
+                    int intI = memberDao.doMemberDel(strMemberId); // DELETE는 int형으로 반환
+                    return intI;
+                }
+                
+                /* 
+                 * [INSERT] - 회원 등록
+                 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 VO객체(@ModelAttribute 사용했기 때문에 VO객체로 맞춤)
+                 */
+                public int doMemberIns(Vo_member vo_member) {
+                    int intI = memberDao.doMemberIns(vo_member); // INSERT는 int형으로 반환
+                    return intI;
+                }
+            }
+    e. Controller
+        - /src/main/java/com/spring/boot/controller/Member_reg.java
+            package com.spring.boot.controller;
+
+            import java.util.ArrayList;
+            import java.util.List;
+
+            import javax.servlet.http.HttpServletRequest;
+
+            import org.springframework.beans.factory.annotation.Autowired;
+            import org.springframework.stereotype.Controller;
+            import org.springframework.ui.Model;
+            import org.springframework.web.bind.annotation.GetMapping;
+            import org.springframework.web.bind.annotation.ModelAttribute;
+            import org.springframework.web.bind.annotation.PostMapping;
+            import org.springframework.web.bind.annotation.RequestMapping;
+            import org.springframework.web.bind.annotation.RequestParam;
+
+            import com.spring.boot.service.MemberService;
+            import com.spring.boot.vo.Vo_member;
+
+            import lombok.extern.slf4j.Slf4j;
+
+            @Slf4j
+            @Controller
+            @RequestMapping("member")
+            public class Member_reg {
+
+                /* @Autowired: 서비스 주입 */
+                @Autowired
+                MemberService memberService;    
+                
+                /* 전체 화면 조회 */
+                @GetMapping("/list")
+                public String doMemberList(Model model) {
+                    List<Vo_member> list = new ArrayList<>();
+                    list = memberService.doMemberList();
+                    
+                    model.addAttribute("list", list);
+                    return "/member/member_list";
+                }
+                
+                /*
+                 * [INSERT] - 등록(수정 할때와 비슷)
+                 * 화면 이동이기 때문에 @GetMapping 사용
+                 */
+                @GetMapping("/insert")
+                public String doIns() {
+                    return "/member/member_join";
+                }
+                
+                /*
+                 * [INSERT] - 등록하기 버튼 실행
+                 * 화면 이동이기 때문에 @GetMapping 사용
+                 */
+                @PostMapping("/insert_exe")
+                public String doInsExe(@ModelAttribute Vo_member vo_member) {
+                    
+                    int intI = memberService.doMemberIns(vo_member); // INSERT는 int형으로 반환
+                            
+                    return "redirect:/member/list"; // home.java(Controller)을 그대로 호출 
+                }
+                    
+                /* 수정 클릭시 기존 데이터 들고오면서 수정페이지로 이동 - 고전적인 방식 */
+                @GetMapping("/modify")
+                public String doMod(HttpServletRequest request) {
+                    String strMemberId = request.getParameter("strMemberId");
+                    
+                    Vo_member vo_member = new Vo_member();
+                    vo_member = memberService.doMemberListOne(strMemberId); // 인자 값을 strKeyId로 던져줌
+                    
+                    request.setAttribute("vo_member", vo_member); // request에서 vo_record 값을 담아서 저장
+                    
+                    return "/member/member_mod";
+                }
+                
+                /*
+                 * [UPDATE] - 수정 (VO 사용) 
+                 * @ModelAttribute: 쿼리 스트링 자동 매핑  
+                 */
+                @PostMapping("/modify_exe")
+                public String doModExe(@ModelAttribute Vo_member vo_member) {
+                    
+                    int intI = memberService.doMemberUp(vo_member); // UPDATE는 int형으로 반환
+                            
+                    return "redirect:/home/member_reg"; // home.java(Controller)을 그대로 호출 
+                }
+                
+                /*
+                 * [DELETE] - 삭제
+                 * /SpringBoot-Record/src/main/webapp/WEB-INF/views/home/record.jsp 
+                 * <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div> 
+                 * 넘어올 때 key_id로 넘어오는것을 알 수 있기 때문에 key_id로 DELETE(삭제) 해주면 됨 
+                 */
+                @GetMapping("/delete")
+                public String doDel(@RequestParam(value="memberId", defaultValue = "--") String strMemberId) {
+                    int intI = memberService.doMemberDel(strMemberId); // DELETE는 int형으로 반환
+                    log.info("intI ========>" + intI);
+                    return "redirect:/member/list"; // home.java(Controller)을 그대로 호출 
+                }
+            }
+            
+    f. JSP(view)
+        - /src/main/webapp/WEB-INF/views/member/member_join.jsp
+        - /src/main/webapp/WEB-INF/views/member/member_list.jsp
+    
             
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
