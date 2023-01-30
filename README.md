@@ -32,7 +32,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
     - 확장 추가 > 확장 프로그램에서 Google 번역 오른쪽 마우스 > 옵션 > 즉시 팝업을 표시합니다. > 저장
     - 재부팅 후 영어 문장에 드래그만 한번 해주면 자동으로 번역된 팝업창 나옴
 
-## 💡 HOW TO IMPORT DEPENDENCIES ON MAVEN? 
+## 💡 HOW TO IMPORT DEPENDENCIES ON MAVEN?
     - https://mvnrepository.com/
         - 해당 링크에서 추가 하려는 의존성을 검색 > 버전 클릭 > Maven > 복사한 후 pom.xml 
         - pom.xml 오른쪽 마우스 > Maven > Update > Force Update of ~ 
@@ -515,7 +515,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
         <select id="doStudyListOne" resultType="com.spring.boot.vo.Vo_record">        
             SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
             FROM Study_record
-            WHERE key_id = #{strKeyId}
+            WHERE key_id = to_number(#{strKeyId})
         </select>
     
     e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
@@ -535,11 +535,11 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 <br><input type="submit" value="게시글 수정"> 
             </form>
                 
-## 💡 [UPDATE] - 내용(contents) 변경 후 게시글 수정 시 UPDATE(수정)
-    - 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 게시글 수정하기 버튼 클릭시 UPDATE(수정) 작동 
+## 💡 [UPDATE] - 내용(contents) 변경 후 기록 수정 시 UPDATE(수정) / Update는 int형으로 반환
+    - 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 기록 수정하기 버튼 클릭시 UPDATE(수정) 작동 
    
     a. Controller
-        /src/main/java/com/spring/boot/controller/record_reg.java
+        - /src/main/java/com/spring/boot/controller/record_reg.java
             /* Upate(수정) - VO 사용 */
             /* @ModelAttribute: 쿼리 스트링 자동 매핑  */
             @PostMapping("/modify_exe")
@@ -569,15 +569,80 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             
     d. Mapper
         - /src/main/resources/sqlmapper/study_sql.xml
-            <!-- [UPDATE] VO객체 수정 > 게시글 내용 수정 후 > 수정하기(기록 수정) - doStudyUp -->
+            <!-- [UPDATE] VO객체 수정 > 기록 수정 후 > 수정하기(기록 수정) - doStudyUp -->
             <!-- VO를 사용하기 때문에 Vo_record.java 선언한 변수명 그대로 값을 사용 -->
             <update id="doStudyUp" parameterType="com.spring.boot.vo.Vo_record">
                 UPDATE Study_record
                 SET study_day = #{studyDay}, contents = #{contents}, reg_day = SYSDATE
-                WHERE key_id = #{keyId}    
+                WHERE key_id = to_number(#{keyId})    
             </update>
         
-                
+## 💡 [DELETE] - 기록 삭제 / DELETE도 int형으로 반환
+    * 화면단(JSP) - 기록 삭제(record.jsp) 
+        - /src/main/webapp/WEB-INF/views/home/record.jsp
+        - <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div> 
+        - 넘어올 때 key_id로 넘어오는것을 알 수 있기 때문에 key_id로 DELETE(삭제) 해주면 됨 
+    
+    a. Controller
+        - /src/main/java/com/spring/boot/controller/record_reg.java
+        - 해당 Controller에 @Slf4j 추가
+            /*
+             *  /SpringBoot-Record/src/main/webapp/WEB-INF/views/home/record.jsp 
+             *  <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div> 
+             *  넘어올 때 key_id로 넘어오는것을 알 수 있기 때문에 key_id로 DELETE(삭제) 해주면 됨 
+             */
+            @GetMapping("/delete")
+            public String doDel(@RequestParam(value="key_id", defaultValue = "--") String strKeyId) {
+                int intI = studyService.doStudyDel(strKeyId); // Mybatis - DELETE는 int형으로 반환
+                log.info("intI ========>" + intI);
+                return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
+            }
+            
+    b. Service
+        - /src/main/java/com/spring/boot/service/StudyService.java        
+            /* 
+             * /src/main/java/com/spring/boot/controller/record_reg.java 에서 @RequestParam 사용
+             * 기록 삭제(DELETE)
+             * DELETE 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
+             */    
+            public int doStudyDel(String strKeyId) {
+                int intI = studyDao.doStudyDel(strKeyId); //  Mybatis - DELETE는 int형으로 반환
+                return intI;
+            }
+            
+    c. DAO
+        - /src/main/java/com/spring/boot/dao/StudyDao.java
+            /* 기록 삭제(DELETE) - 컨트롤러에서 String strKeyId로 받았기 때문에 그대로 사용 */
+            public int doStudyDel(String strKeyId);
+            
+    d. Mapper
+        - /src/main/resources/sqlmapper/study_sql.xml
+            <!-- [DELETE] 기록 삭제하기 - doStudyDel -->
+            <!-- parameterType 사용 안해도 알아서 자동 매핑 해줌(해당 방식을 권장) -->
+            <delete id="doStudyDel">
+                DELETE FROM Study_record
+                WHERE key_id = to_number(#{keyId}) 
+            </delete> 
+
+
+
+## 💡 [INSERT] - 기록 등록 / INSERT도 int형으로 반환
+    * 화면단(JSP) - 기록 등록
+    
+    a. Controller
+        - /src/main/java/com/spring/boot/controller/record_reg.java
+            
+    b. Service
+        - /src/main/java/com/spring/boot/service/StudyService.java        
+            
+    c. DAO
+        - /src/main/java/com/spring/boot/dao/StudyDao.java
+            
+    d. Mapper
+        - /src/main/resources/sqlmapper/study_sql.xml
+
+
+    
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
