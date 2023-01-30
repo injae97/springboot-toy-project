@@ -373,7 +373,13 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 log.info(vo_record.getRegDay());
         
         
-## 💡 게시판(CRUD) - 29:12 / 1:04:08
+## 💡 게시판(CRUD) - 41:52 / 1:04:08
+    * CRUD
+        a. C(Create) = Insert
+        b. R(Read) = Select
+        c. U = Update
+        d. D = Delete
+        
     * 화면단 - 수정, 삭제 버튼 추가(record.jsp) 
         - /src/main/webapp/WEB-INF/views/home/record.jsp
             <button type="button" onclick="location.href='/record_reg/insert'">게시글 등록</button>
@@ -390,140 +396,186 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             </div>
             <% } %>
             
-    a. [UPDATE] ★ DB 흐름 ★
+    * ★ DB 흐름 ★
         - Controller > Service > DAO > Mapper > DB
             - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
                 * Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
                                 
-        a. Controller
-            - @Autowired를 사용해서 Service를 주입해줘야 한다.(StudyService)
-            - /src/main/java/com/spring/boot/controller/record_reg.java  
-                package com.spring.boot.controller;
+## 💡 게시글 수정 버튼 클릭 했을 때 DB 데이터 가져오는 법
+    a. Controller
+        - @Autowired를 사용해서 Service를 주입해줘야 한다.(StudyService)
+        - /src/main/java/com/spring/boot/controller/record_reg.java  
+            package com.spring.boot.controller;
 
-                import javax.servlet.http.HttpServletRequest;
+            import javax.servlet.http.HttpServletRequest;
 
-                import org.springframework.beans.factory.annotation.Autowired;
-                import org.springframework.stereotype.Controller;
-                import org.springframework.web.bind.annotation.GetMapping;
-                import org.springframework.web.bind.annotation.RequestMapping;
+            import org.springframework.beans.factory.annotation.Autowired;
+            import org.springframework.stereotype.Controller;
+            import org.springframework.web.bind.annotation.GetMapping;
+            import org.springframework.web.bind.annotation.RequestMapping;
 
-                import com.spring.boot.service.StudyService;
-                import com.spring.boot.vo.Vo_record;
+            import com.spring.boot.service.StudyService;
+            import com.spring.boot.vo.Vo_record;
 
-                @Controller
-                @RequestMapping("record_reg")
-                public class record_reg {
+            @Controller
+            @RequestMapping("record_reg")
+            public class record_reg {
 
-                    /* @Autowired: 서비스 주입 */
-                    @Autowired
-                    StudyService studyService;    
-                    
-                    /* Insert(등록) 
-                     * 입력이 a tag Mapping으로 들어왔기 때문에 GetMapping
-                     */
-                    @GetMapping("/insert")
-                    public String doInsert() {
-                        return "";
-                    }
-                                
-                    /* [UPDATE](수정) */
-                    @GetMapping("/modify")
-                    public String doModify(HttpServletRequest request) {
-                        String strKeyId = request.getParameter("key_id");
-                        
-                        Vo_record vo_record = new Vo_record();
-                        vo_record = studyService.doStudyListOne(strKeyId); // 인자 값을 strKeyId로 던져줌        
-                        request.setAttribute("vo_record", vo_record); // request에서 vo_record 값을 담아서 저장
-                        
-                        return "/record/record_modify";
-                    }            
-                    
-                    /* Delete(삭제) */
-                    @GetMapping("/delete")
-                    public String doDelete() {
-                        return "";
-                    }
+                /* @Autowired: 서비스 주입 */
+                @Autowired
+                StudyService studyService;    
+                
+                /* Insert(등록) 
+                 * 입력이 a tag Mapping으로 들어왔기 때문에 GetMapping
+                 */
+                @GetMapping("/insert")
+                public String doInsert() {
+                    return "";
                 }
-
-        b. Service
-            - /src/main/java/com/spring/boot/service/StudyService.java
-                package com.spring.boot.service;
-                import java.util.ArrayList;
-                import java.util.List;
-                import java.util.Map;
-
-                import org.springframework.beans.factory.annotation.Autowired;
-                import org.springframework.stereotype.Service;
-
-                import com.spring.boot.dao.StudyDao;
-                import com.spring.boot.vo.Vo_record;
-
-                @Service
-                public class StudyService {
-                    
-                    @Autowired
-                    StudyDao studyDao;
-                    
-                    /* 
-                     * returnType : VO
-                     */                    
-                    public List<Vo_record> doStudyList() {
-                        List<Vo_record> list = new ArrayList<>();
-                        list = studyDao.doStudyList();
-                        return list;
-                    }
                             
-                    /*
-                     * [UPDATE]                    
-                     * returnType : VO
-                     */
-                    public Vo_record doStudyListOne(String strKeyId) {
-                        Vo_record vo_record = new Vo_record();
-                        vo_record = studyDao.doStudyListOne(strKeyId); // strKeyId 값을 그대로 전달
-                        return vo_record;
-                    }
-                }
-                
-        c. DAO
-            - /src/main/java/com/spring/boot/dao/StudyDao.java
-                package com.spring.boot.dao;
-
-                import java.util.List;
-
-                import org.apache.ibatis.annotations.Mapper;
-                import com.spring.boot.vo.Vo_record;
-
-                @Mapper
-                public interface StudyDao {
+                /* 수정 화면 페이지(게시글 수정 눌렀을 때 기존 데이터 들고옴) - 고전적인 방식 */
+                @GetMapping("/modify")
+                public String doModify(HttpServletRequest request) {
+                    String strKeyId = request.getParameter("key_id");
                     
-                    // public List<Map<String, String>> doStudyList(); // Mapper(resultType = map)
-                    public List<Vo_record> doStudyList(); // 기록 전체 리스트: VO 객체로 반환
-            
-                    public Vo_record doStudyListOne(String strKeyId); // [UPDATE] 기록 One row: VO 객체로 반환(strKeyId 값을 그대로 전달)    
+                    Vo_record vo_record = new Vo_record();
+                    vo_record = studyService.doStudyListOne(strKeyId); // 인자 값을 strKeyId로 던져줌
+                    
+                    request.setAttribute("vo_record", vo_record); // request에서 vo_record 값을 담아서 저장
+                    
+                    return "/record/record_modify";
+                }           
+                
+                /* Delete(삭제) */
+                @GetMapping("/delete")
+                public String doDelete() {
+                    return "";
                 }
+            }
+
+    b. Service
+        - /src/main/java/com/spring/boot/service/StudyService.java
+            package com.spring.boot.service;
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.Map;
+
+            import org.springframework.beans.factory.annotation.Autowired;
+            import org.springframework.stereotype.Service;
+
+            import com.spring.boot.dao.StudyDao;
+            import com.spring.boot.vo.Vo_record;
+
+            @Service
+            public class StudyService {
                 
-        d. Mapper
-            <!-- VO객체 DB연결([UPDATE] doStudyListOne(one row select)) -->
-            <select id="doStudyListOne" resultType="com.spring.boot.vo.Vo_record">        
-                SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
-                FROM Study_record
-                WHERE key_id = #{strKeyId}
-            </select>
+                @Autowired
+                StudyDao studyDao;
+                
+                /* 
+                 * returnType : VO
+                 */                    
+                public List<Vo_record> doStudyList() {
+                    List<Vo_record> list = new ArrayList<>();
+                    list = studyDao.doStudyList();
+                    return list;
+                }
+                        
+                /* 
+                 * One Row Select 
+                 * returnType : VO
+                 */
+                public Vo_record doStudyListOne(String strKeyId) {
+                    Vo_record vo_record = new Vo_record();
+                    vo_record = studyDao.doStudyListOne(strKeyId); // strKeyId 값을 그대로 전달
+                    return vo_record;
+                }
+            }
+            
+    c. DAO
+        - /src/main/java/com/spring/boot/dao/StudyDao.java
+            package com.spring.boot.dao;
+
+            import java.util.List;
+
+            import org.apache.ibatis.annotations.Mapper;
+            import com.spring.boot.vo.Vo_record;
+
+            @Mapper
+            public interface StudyDao {
+                /* public List<Map<String, String>> doStudyList(); // Mapper(resultType = map) */
+                public List<Vo_record> doStudyList(); // 기록 전체 리스트: VO 객체로 반환
+                
+                /* One row Select: VO 객체로 반환(strKeyId 값을 그대로 전달) */
+                public Vo_record doStudyListOne(String strKeyId);    
+            }
+            
+    d. Mapper
+        <!-- VO객체 DB연결(doStudyListOne(one row select)) -->
+        <select id="doStudyListOne" resultType="com.spring.boot.vo.Vo_record">        
+            SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
+            FROM Study_record
+            WHERE key_id = #{strKeyId}
+        </select>
+    
+    e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
+        - /src/main/webapp/WEB-INF/views/record/record_modify.jsp    
+            <%
+                Vo_record vo_record = (Vo_record) request.getAttribute("vo_record");
+            %>
+            <!-- 게시글 수정화면 페이지 -->
+            <!-- VO객체를 보면서 사용(name = VO 객체 컬럼들) -->
+            <!-- 수정하기 버튼 클릭시 action의 /record_reg/modify_exe로 이동함  -->
+            <!-- ★★★ record_reg.java Controller에서 @RequestMapping("record_reg") + @PostMapping("/modify_exe") 를 더해서 action에 기입 ★★★ -->
+            <form name="form_record_mod" action="/record_reg/modify_exe" method="post">
+                <div>keyId: <input type="text" name="keyId" value="<%=vo_record.getKeyId()%>" readonly></div><br>
+                <div>StudyDay: <input type="text" name="StudyDay" value="<%=vo_record.getStudyDay()%>"></div><br>
+                <div>Contents: <input type="text" name="contents" value="<%=vo_record.getContents()%>" size="80"></div><p>    
+                
+                <br><input type="submit" value="게시글 수정"> 
+            </form>
+                
+## 💡 [UPDATE] - 내용(contents) 변경 후 게시글 수정 시 UPDATE(수정)
+    - 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 게시글 수정하기 버튼 클릭시 UPDATE(수정) 작동 
+    a. Controller
+        /src/main/java/com/spring/boot/controller/record_reg.java
+            /* Upate(수정) - VO 사용 */
+            /* @ModelAttribute: 쿼리 스트링 자동 매핑  */
+            @PostMapping("/modify_exe")
+            public String doModExe(@ModelAttribute Vo_record vo_record) {
+                
+                int intI = studyService.doStudyUp(vo_record); // Mybatis - Update는 int형으로 반환
+                        
+                return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
+            }
+            
+    b. Service
+        - /src/main/java/com/spring/boot/service/StudyService.java        
+            /* 
+             * /src/main/java/com/spring/boot/controller/record_reg.java 에서 VO객체(@ModelAttribute 사용했기 때문에 VO객체로 맞춤)
+             * 기록 수정(UPDATE)
+             * UPDATE 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
+             */
+            public int doStudyUp(Vo_record vo_record) {
+                int intI = studyDao.doStudyUp(vo_record); //  Mybatis - Update는 int형으로 반환
+                return intI;
+            }
+            
+    c. DAO
+        - /src/main/java/com/spring/boot/dao/StudyDao.java
+            /* 기록 수정 (UPDATE) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
+            public int doStudyUp(Vo_record vo_record);
+            
+    d. Mapper
+        - /src/main/resources/sqlmapper/study_sql.xml
+            <!-- [UPDATE] VO객체 수정 > 게시글 내용 수정 후 > 수정하기(기록 수정) - doStudyUp -->
+            <!-- VO를 사용하기 때문에 Vo_record.java 선언한 변수명 그대로 값을 사용 -->
+            <update id="doStudyUp" parameterType="com.spring.boot.vo.Vo_record">
+                UPDATE Study_record
+                SET study_day = #{studyDay}, contents = #{contents}, reg_day = SYSDATE
+                WHERE key_id = #{keyId}    
+            </update>
         
-        e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
-            - /src/main/webapp/WEB-INF/views/record/record_modify.jsp    
-                <%
-                    Vo_record vo_record = (Vo_record) request.getAttribute("vo_record");
-                %>
-                <!-- 게시글 수정화면 페이지 -->
-                <!-- VO객체를 보면서 사용(name = VO 객체 컬럼들) -->
-                <form name="form_record_mod" action="/record/modify_exe" method="post">
-                    <div>keyId: <input type="text" name="keyId" value="<%=vo_record.getKeyId()%>" readonly></div><br>
-                    <div>StudyDay: <input type="text" name="StudyDay" value="<%=vo_record.getStudyDay()%>"></div><br>
-                    <div>Contents: <input type="text" name="contents" value="<%=vo_record.getContents()%>" size="80"></div><p>
-                
-                    <br><input type="submit" value="게시글 수정">   
-                </form>
                 
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
