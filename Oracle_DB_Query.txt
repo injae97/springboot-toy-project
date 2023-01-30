@@ -1,8 +1,4 @@
-create database sbp;
-
-use sbp;
-
--- DEFAULT 시퀀스 생성 하기
+-- DEFAULT 기록 시퀀스 생성 하기
 CREATE SEQUENCE SQ_STUDY_RECORD
 	START WITH 1001
 	INCREMENT BY 1
@@ -11,7 +7,7 @@ CREATE SEQUENCE SQ_STUDY_RECORD
 	NOCACHE
 	NOCYCLE;
 
--- 공부 기록 DB 테이블 
+-- 기록 DB 테이블 
 CREATE TABLE study_record (
 	key_id NUMBER(10) DEFAULT SQ_STUDY_RECORD.Nextval, -- AutoIncrement
 	study_day VARCHAR2(8),
@@ -20,13 +16,45 @@ CREATE TABLE study_record (
 	CONSTRAINT pk_sutdy_record PRIMARY KEY(key_id)
 ); 
 
--- 해당 테이블 데이터 삽입
+-- 해당 기록 테이블에 데이터 삽입
 INSERT INTO STUDY_RECORD(study_day, contents, reg_day)
 VALUES ('20230129', '공부내용2', sysdate);
 
--- 해당 테이블 데이터 조회
-SELECT * FROM STUDY_RECORD;
+-- 해당 기록 테이블 데이터 조회
+SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY.mm.dd hh24mi') AS reg_day FROM Study_record;
+
+
+------------------------------------------------------------------------------------------------------------
+-- DEFAULT 회원목록 시퀀스 생성 하기
+-- "SYSTEM"."SQ_MEMBER" = SQ_MEMBER
+CREATE SEQUENCE "SYSTEM"."SQ_MEMBER"
+	START WITH 1
+	INCREMENT BY 1
+	MINVALUE  1
+	MAXVALUE 9999
+	NOCACHE
+	NOCYCLE
+	NOORDER
+	NOKEEP
+	NOSCALE
+	GLOBAL;
+
+-- 회원목록 DB 테이블 
+CREATE TABLE STUDY_MEMBER (
+	MEMBER_ID NUMBER(10, 0) DEFAULT "SYSTEM"."SQ_MEMBER".Nextval, -- AutoIncrement
+	LOGIN_ID VARCHAR2(20 BYTE),
+	PASSWORD VARCHAR2(100 BYTE),
+	NAME VARCHAR2(100 BYTE),
+	ROLE VARCHAR2(100 BYTE),
+	REG_DAY DATE,	
+	CONSTRAINT PK_STUDY_MEMBER PRIMARY KEY(MEMBER_ID)
+); 
+
+-- 해당 회원목록 테이블 데이터 삽입
+INSERT INTO STUDY_MEMBER(MEMBER_ID, LOGIN_ID, NAME, ROLE, REG_DAY)
+VALUES ('5000001', 'injekim97', '김인제', 'MEMBER', sysdate);
+
+-- 해당 회원목록 테이블 데이터 조회
+SELECT to_char(MEMBER_ID) AS MEMBER_ID, LOGIN_ID, PASSWORD, NAME, ROLE,  to_char(reg_day,'YYYY.mm.dd hh24mi') AS REG_DAY FROM STUDY_MEMBER;
 
 COMMIT;
-
-SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY.mm.dd hh24mi') AS reg_day FROM Study_record;
