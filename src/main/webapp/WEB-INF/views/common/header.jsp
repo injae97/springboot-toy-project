@@ -12,7 +12,7 @@
       
       <div class="col-md-3 text-end">
           <button type="button" class="btn btn-outline-primary me-2" onclick="location.href='/login/login'" >Login</button>
-          <button type="button" class="btn btn-primary" onclick="location.href='/login/join'">Sign-up</button>
+          <button type="button" class="btn btn-primary" onclick="location.href='/member/insert'">Sign-up</button>
       </div>
     </header>
   </div>

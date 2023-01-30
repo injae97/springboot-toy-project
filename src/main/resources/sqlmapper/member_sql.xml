@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- DB연결을 위한 DAO 파일 경로 지정 -->
+<!-- id 값은 연결한 DAO파일에서 실행시킬 메서드 이름 -->
+<!-- DB 테이블 생성 후 해당 컬럼들을 쿼리로 작성 -->
+<mapper namespace="com.spring.boot.dao.MemberDao">
+        
+    <!-- Member List (회원 전체 조회)--> 
+    <select id="doMemberList" resultType="com.spring.boot.vo.Vo_member">	    
+	    SELECT TO_CHAR(MEMBER_ID) AS MEMBER_ID, LOGIN_ID, NAME, ROLE, TO_CHAR(REG_DAY,'YYYY-mm-dd hh24mi') AS REG_DAY 
+	    FROM STUDY_MEMBER
+	    ORDER BY MEMBER_ID
+    </select>
+                 
+    <!-- VO객체 DB연결(doMemberListOne - one row select) -->
+    <select id="doMemberListOne" resultType="com.spring.boot.vo.Vo_member">	    
+	    SELECT TO_CHAR(MEMBER_ID) AS MEMBER_ID, LOGIN_ID, NAME, ROLE, TO_CHAR(REG_DAY,'YYYY-mm-dd hh24mi') AS REG_DAY 
+	    FROM STUDY_MEMBER
+	    WHERE MEMBER_ID = TO_NUMBER(#{strMemberId})
+    </select>
+      
+    <!-- [UPDATE] VO객체 수정 > 회원 수정 후 > 수정하기(회원 수정) - doMemberUp -->
+    <!-- VO를 사용하기 때문에 Vo_record.java 선언한 변수명 그대로 값을 사용 -->
+    <update id="doMemberUp" parameterType="com.spring.boot.vo.Vo_member">
+	    UPDATE STUDY_MEMBER
+	    SET NAME = #{NAME}, ROLE = #{ROLE}, REG_DAY = SYSDATE
+	    WHERE MEMBER_ID = TO_NUMBER(#{MEMBER_ID})  
+    </update>
+    
+    <!-- [DELETE] 회원 삭제 - doMemberDel -->
+    <!-- parameterType 사용 안해도 알아서 자동 매핑 해줌(해당 방식을 권장) -->
+    <delete id="doMemberDel">
+	    DELETE FROM STUDY_MEMBER
+	    WHERE MEMBER_ID = TO_NUMBER(#{strMemberId}) 
+    </delete>    
+    
+    <!-- [INSERT] 회원 등록 - doMemberIns -->
+    <!-- parameterType 사용 안해도 알아서 자동 매핑 해줌(해당 방식을 권장) -->
+    <!-- /src/main/java/com/spring/boot/vo/Vo_member.java -->
+    <insert id="doMemberIns">
+	    INSERT INTO STUDY_MEMBER(LOGIN_ID, PASSWORD, NAME, ROLE, REG_DAY)
+	    VALUES (#{loginId}, #{password}, #{name}, #{role}, SYSDATE) 
+    </insert>   
+    
+</mapper>

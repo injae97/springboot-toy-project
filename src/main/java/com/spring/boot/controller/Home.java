@@ -21,11 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/home")
 public class Home {
 
-	/*
-	 * HTML은 request(/WEB-INF/views/home.html)를 받을 수 없음(호출 실패) JSP는
-	 * request(/WEB-INF/views/home.jsp)를 받을 수 있음(호출 성공)
-	 */
-
 	/* Service를 가져오기 위해 @Autowired 사용 */
 	@Autowired
 	StudyService studyService;
@@ -34,41 +29,6 @@ public class Home {
 	public String doHome() {
 		return "/home/home";
 	}
-
-	/*
-	 * @ResponseBody 사용할 경우 jsp에서 view 화면 보여주지 않음 return type : Map
-	 * 
-	 * @GetMapping("/record") public String dorecord(HttpServletRequest request,
-	 * Model model) { List<Map<String, String>> list = new ArrayList<>(); list =
-	 * studyService.doStudyList();
-	 * 
-	 * for(Map<String, String> map : list) { System.out.println(map.get("KEY_ID"));
-	 * System.out.println(map.get("STUDY_DAY"));
-	 * System.out.println(map.get("CONTENTS"));
-	 * System.out.println(map.get("REG_DAY")); }
-	 * 
-	 * // request.setAttribute("list", list); -> request에서 담는 방법
-	 * model.addAttribute("list", list); // 모델에 담는 방법 return "/home/record"; //
-	 * return은 forward이기 때문에 request로 보낸 값을 보냄 }
-	 */
-
-	/* return type : resultMap(VO 객체) */
-	/*
-	 * @GetMapping("/record") public String dorecord(HttpServletRequest request,
-	 * Model model) { List<Vo_record> list = new ArrayList<>(); list =
-	 * studyService.doStudyList();
-	 * 
-	 * Getter & Setter 사용 System.out.println("Vo_record"); for(Vo_record vo_record :
-	 * list) { System.out.println(vo_record.getKey_id());
-	 * System.out.println(vo_record.getStudy_day());
-	 * System.out.println(vo_record.getContents());
-	 * System.out.println(vo_record.getReg_day()); }
-	 * 
-	 * request.setAttribute("list", list); // request에서 담는 방법 //
-	 * model.addAttribute("list", list); // 모델에 담는 방법 return "/home/record"; //
-	 * return은 forward이기 때문에 request로 보낸 값을 보냄 }
-	 */
-	
 	
 	/* return type : mapUnderscoreToCamelCase(VO 객체) */
 	@GetMapping("/record")
@@ -92,6 +52,7 @@ public class Home {
 		return "/home/record"; // return은 forward이기 때문에 request로 보낸 값을 보냄
 	}
 
+	/* ★ 회원 가입 시 해당 파일로 매핑(여기 부분 수정) ★ */
 	@GetMapping("/member_list")
 	public String domember() {
 		return "/home/member_list";

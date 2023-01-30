@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @RequestMapping("record_reg")
-public class record_reg {
+public class Record_reg {
 
 	/* @Autowired: 서비스 주입 */
 	@Autowired
