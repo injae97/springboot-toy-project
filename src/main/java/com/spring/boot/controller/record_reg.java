@@ -8,10 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.spring.boot.service.StudyService;
 import com.spring.boot.vo.Vo_record;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 @RequestMapping("record_reg")
 public class record_reg {
@@ -52,9 +56,15 @@ public class record_reg {
 	}
 	
 	
-	/* Delete(삭제) */
+	/*
+	 *  /SpringBoot-Record/src/main/webapp/WEB-INF/views/home/record.jsp 
+	 *  <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div> 
+	 *  넘어올 때 key_id로 넘어오는것을 알 수 있기 때문에 key_id로 DELETE(삭제) 해주면 됨 
+	 */
 	@GetMapping("/delete")
-	public String doDelete() {
-		return "";
+	public String doDel(@RequestParam(value="key_id", defaultValue = "--") String strKeyId) {
+		int intI = studyService.doStudyDel(strKeyId); // Mybatis - DELETE는 int형으로 반환
+		log.info("intI ========>" + intI);
+		return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
 	}
 }

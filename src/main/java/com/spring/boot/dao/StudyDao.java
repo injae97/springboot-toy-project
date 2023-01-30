@@ -17,4 +17,7 @@ public interface StudyDao {
 	
 	/* 기록 수정 (UPDATE) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
 	public int doStudyUp(Vo_record vo_record);
+	
+	/* 기록 삭제(DELETE) - 컨트롤러에서 String strKeyId로 받았기 때문에 그대로 사용 */
+	public int doStudyDel(String strKeyId);
 }

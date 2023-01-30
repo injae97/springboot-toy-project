@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.spring.boot.dao.StudyDao;
 import com.spring.boot.vo.Vo_record;
@@ -56,4 +57,16 @@ public class StudyService {
 		int intI = studyDao.doStudyUp(vo_record); //  Mybatis - Update는 int형으로 반환
 		return intI;
 	}
+	
+	
+	/* 
+	 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 @RequestParam 사용
+	 * 기록 삭제(DELETE)
+	 * DELETE 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
+	 */	
+	public int doStudyDel(String strKeyId) {
+		int intI = studyDao.doStudyDel(strKeyId); //  Mybatis - DELETE는 int형으로 반환
+		return intI;
+	}
+	
 }

@@ -76,7 +76,8 @@ public class Home {
 		List<Vo_record> list = new ArrayList<>();
 		list = studyService.doStudyList();
 		
-		/* Getter & Setter 사용 */
+		/*
+		// Getter & Setter 사용
 		log.info("Vo_record");
 		for(Vo_record vo_record : list) {
 			log.info(vo_record.getKeyId());
@@ -84,6 +85,7 @@ public class Home {
 			log.info(vo_record.getContents());
 			log.info(vo_record.getRegDay());
 		}		
+		*/
 		
 		 request.setAttribute("list", list); // request에서 담는 방법
 	    // model.addAttribute("list", list); // 모델에 담는 방법
