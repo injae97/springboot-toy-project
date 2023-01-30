@@ -24,13 +24,6 @@ public class record_reg {
 	@Autowired
 	StudyService studyService;	
 	
-	/* Insert(등록) 
-	 * 입력이 a tag Mapping으로 들어왔기 때문에 GetMapping
-	 */
-	@GetMapping("/insert")
-	public String doInsert() {
-		return "";
-	}
 	
 	/* 수정 화면 페이지(게시글 수정 눌렀을 때 기존 데이터 들고옴) - 고전적인 방식 */
 	@GetMapping("/modify")
@@ -45,26 +38,50 @@ public class record_reg {
 		return "/record/record_modify";
 	}
 	
-	/* Upate(수정) - VO 사용 */
-	/* @ModelAttribute: 쿼리 스트링 자동 매핑  */
+	/*
+	 * [UPDATE] - 수정(VO 사용) 
+	 * @ModelAttribute: 쿼리 스트링 자동 매핑  
+	 */
 	@PostMapping("/modify_exe")
 	public String doModExe(@ModelAttribute Vo_record vo_record) {
 		
-		int intI = studyService.doStudyUp(vo_record); // Mybatis - Update는 int형으로 반환
+		int intI = studyService.doStudyUp(vo_record); // Mybatis - UPDATE는 int형으로 반환
 				
 		return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
 	}
 	
 	
 	/*
-	 *  /SpringBoot-Record/src/main/webapp/WEB-INF/views/home/record.jsp 
-	 *  <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div> 
-	 *  넘어올 때 key_id로 넘어오는것을 알 수 있기 때문에 key_id로 DELETE(삭제) 해주면 됨 
+	 * [DELETE] - 삭제
+	 * /SpringBoot-Record/src/main/webapp/WEB-INF/views/home/record.jsp 
+	 * <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div> 
+	 * 넘어올 때 key_id로 넘어오는것을 알 수 있기 때문에 key_id로 DELETE(삭제) 해주면 됨 
 	 */
 	@GetMapping("/delete")
 	public String doDel(@RequestParam(value="key_id", defaultValue = "--") String strKeyId) {
 		int intI = studyService.doStudyDel(strKeyId); // Mybatis - DELETE는 int형으로 반환
 		log.info("intI ========>" + intI);
+		return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
+	}
+	
+	/*
+	 * [INSERT] - 등록(수정 할때와 비슷)
+	 * 화면 이동이기 때문에 @GetMapping 사용
+	 */
+	@GetMapping("/insert")
+	public String doIns() {
+		return "/record/record_ins";
+	}
+	
+	/*
+	 * [INSERT] - 등록하기 버튼 실행
+	 * 화면 이동이기 때문에 @GetMapping 사용
+	 */
+	@PostMapping("/insert_exe")
+	public String doInsExe(@ModelAttribute Vo_record vo_record) {
+		
+		int intI = studyService.doStudyIns(vo_record); // Mybatis - INSERT는 int형으로 반환
+				
 		return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
 	}
 }

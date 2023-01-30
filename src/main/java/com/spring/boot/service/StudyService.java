@@ -49,8 +49,8 @@ public class StudyService {
 	
 	
 	/* 
+	 * [UPDATE] - 기록 수정
 	 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 VO객체(@ModelAttribute 사용했기 때문에 VO객체로 맞춤)
-	 * 기록 수정(UPDATE)
 	 * UPDATE 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
 	 */
 	public int doStudyUp(Vo_record vo_record) {
@@ -60,8 +60,8 @@ public class StudyService {
 	
 	
 	/* 
+	 * [DELETE] - 기록 삭제
 	 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 @RequestParam 사용
-	 * 기록 삭제(DELETE)
 	 * DELETE 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
 	 */	
 	public int doStudyDel(String strKeyId) {
@@ -69,4 +69,14 @@ public class StudyService {
 		return intI;
 	}
 	
+	
+	/* 
+	 * [INSERT] - 기록 등록
+	 * /src/main/java/com/spring/boot/controller/record_reg.java 에서 VO객체(@ModelAttribute 사용했기 때문에 VO객체로 맞춤)
+	 * INSERT 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
+	 */
+	public int doStudyIns(Vo_record vo_record) {
+		int intI = studyDao.doStudyIns(vo_record); //  Mybatis - INSERT는 int형으로 반환
+		return intI;
+	}
 }
