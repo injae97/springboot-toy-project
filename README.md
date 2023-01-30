@@ -624,25 +624,70 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 WHERE key_id = to_number(#{keyId}) 
             </delete> 
 
-
-
 ## 💡 [INSERT] - 기록 등록 / INSERT도 int형으로 반환
     * 화면단(JSP) - 기록 등록
+        - /src/main/webapp/WEB-INF/views/record/record_ins.jsp
+            - record_modify.jsp 파일을 복사하여 record_ins.jsp 파일 생성
+            - 주소를 /insert로 넘겨주기 때문에 Controller에 주소를 넘겨야 하므로 @GetMapping 사용
+            <!-- 게시글 등록화면 페이지 -->
+            <!-- 등록하기 버튼 클릭시 action의 /record_reg/insert_exe로 이동함  -->
+            <!-- ★★★ record_reg.java Controller에서 @RequestMapping("record_reg") + @PostMapping("/insert_exe") 를 더해서 action에 기입 ★★★ -->
+            <form name="form_record_mod" action="/record_reg/insert_exe" method="post">
+                <div>keyId: <input type="text" name="keyId" value="자동입력" readonly></div><br>
+                <div>StudyDay: <input type="text" name="StudyDay" value=""></div><br>
+                <div>Contents: <input type="text" name="contents" size="70" value=""></div><p>
+                      
+                <br><input type="submit" value="등록하기"> 
+            </form>
     
     a. Controller
         - /src/main/java/com/spring/boot/controller/record_reg.java
+            /*
+             * [INSERT] - 등록(수정 할때와 비슷)
+             * 화면 이동이기 때문에 @GetMapping 사용
+             */
+            @GetMapping("/insert")
+            public String doIns() {
+                return "/record/record_ins";
+            }
             
+            /*
+             * [INSERT] - 등록하기 버튼 실행
+             * 화면 이동이기 때문에 @GetMapping 사용
+             */
+            @PostMapping("/insert_exe")
+            public String doInsExe(@ModelAttribute Vo_record vo_record) {
+                
+                int intI = studyService.doStudyIns(vo_record); // Mybatis - INSERT는 int형으로 반환
+                        
+                return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
+            }
+    
     b. Service
         - /src/main/java/com/spring/boot/service/StudyService.java        
-            
+            /* 
+             * [INSERT] - 기록 등록
+             * /src/main/java/com/spring/boot/controller/record_reg.java 에서 VO객체(@ModelAttribute 사용했기 때문에 VO객체로 맞춤)
+             * INSERT 할 때 int로 받기로 컨트롤러에 선언했기 때문에 int형 
+             */
+            public int doStudyIns(Vo_record vo_record) {
+                int intI = studyDao.doStudyIns(vo_record); //  Mybatis - INSERT는 int형으로 반환
+                return intI;
+            }
     c. DAO
         - /src/main/java/com/spring/boot/dao/StudyDao.java
-            
+            /* 기록 등록(INSERT) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
+            public int doStudyIns(Vo_record vo_record);
+
     d. Mapper
         - /src/main/resources/sqlmapper/study_sql.xml
-
-
-    
+            <!-- [INSERT] 기록 등록하기 - doStudyIns -->
+            <!-- parameterType 사용 안해도 알아서 자동 매핑 해줌(해당 방식을 권장) -->
+            <insert id="doStudyIns">
+                INSERT INTO Study_record(study_day, contents, reg_day)
+                VALUES (#{studyDay}, #{contents}, SYSDATE) 
+            </insert>   
+            
 ## 💡 Web Knowledge
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
