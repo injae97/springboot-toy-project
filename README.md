@@ -49,8 +49,9 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-```java
+
 ## 💡 TIL
+```java
     [2023-01-26]
     a.  webapp에 필요한 디렉토리 생성
         1. /src/main/webapp/index.html 에 index.html 생성
@@ -375,6 +376,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
 ```        
         
 ## 💡 기록(CRUD)
+```java
     * CRUD
         a. C(Create) = Insert
         b. R(Read) = Select
@@ -401,8 +403,10 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
         - Controller > Service > DAO > Mapper > DB
             - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
                 * Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
-                                
+```
+
 ## 💡 게시글 수정 버튼 클릭 했을 때 DB 데이터 가져오는 법
+```java
     a. Controller
         - @Autowired를 사용해서 Service를 주입해줘야 한다.(StudyService)
         - /src/main/java/com/spring/boot/controller/record_reg.java  
@@ -535,10 +539,11 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 
                 <br><input type="submit" value="게시글 수정"> 
             </form>
-                
+```
+
 ## 💡 [UPDATE] - 내용(contents) 변경 후 기록 수정 시 UPDATE(수정) / Update는 int형으로 반환
     - 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 기록 수정하기 버튼 클릭시 UPDATE(수정) 작동 
-   
+```java   
     a. Controller
         - /src/main/java/com/spring/boot/controller/record_reg.java
             /* Upate(수정) - VO 사용 */
@@ -577,8 +582,10 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 SET study_day = #{studyDay}, contents = #{contents}, reg_day = SYSDATE
                 WHERE key_id = to_number(#{keyId})    
             </update>
-        
+```
+
 ## 💡 [DELETE] - 기록 삭제 / DELETE도 int형으로 반환
+```java
     * 화면단(JSP) - 기록 삭제(record.jsp) 
         - /src/main/webapp/WEB-INF/views/home/record.jsp
         - <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div> 
@@ -624,8 +631,10 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 DELETE FROM Study_record
                 WHERE key_id = to_number(#{keyId}) 
             </delete> 
+```
 
 ## 💡 [INSERT] - 기록 등록 / INSERT도 int형으로 반환
+```java
     * 화면단(JSP) - 기록 등록
         - /src/main/webapp/WEB-INF/views/record/record_ins.jsp
             - record_modify.jsp 파일을 복사하여 record_ins.jsp 파일 생성
@@ -688,8 +697,10 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 INSERT INTO Study_record(study_day, contents, reg_day)
                 VALUES (#{studyDay}, #{contents}, SYSDATE) 
             </insert>   
+```
 
 ## 💡 회원가입(CRUD) - 응용 및 구조만 파악(실제로 작동 X)
+```java
     * ★ DB 흐름 ★
         - Controller > Service > DAO > Mapper > DB
             - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
@@ -960,9 +971,10 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
     f. JSP(view)
         - /src/main/webapp/WEB-INF/views/member/member_join.jsp
         - /src/main/webapp/WEB-INF/views/member/member_list.jsp
-    
+```    
             
 ## 💡 Web Knowledge
+```java
     * forward(request) vs sendRedirect(response)
         - HTTP 통신으로 생각
         - forward(request): forward는 request를 계속적으로 던져주는 것 (WAS 내부에서만 요청자가 입력한 값을 던져줌)
@@ -1019,3 +1031,4 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             }
             
         * HTTPServletResponse 소스코드와 @ResponBody 안에 있는 소스코드와 동일
+```
