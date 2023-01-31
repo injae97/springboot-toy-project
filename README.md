@@ -415,7 +415,6 @@ j. logback
         d. D = Delete
         
     * 화면단 - 수정, 삭제 버튼 추가(record.jsp)
-    ```java
         - /src/main/webapp/WEB-INF/views/home/record.jsp
             <button type="button" onclick="location.href='/record_reg/insert'">게시글 등록</button>
 
@@ -430,7 +429,7 @@ j. logback
                 <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div>
             </div>
             <% } %>
-    ```   
+
     * ★ DB 흐름 ★
         - Controller > Service > DAO > Mapper > DB
             - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
@@ -578,9 +577,9 @@ e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
 ```
 
 
-## 💡 [UPDATE] - 내용(contents) 변경 후 기록 수정 시 UPDATE(수정) / Update는 int형으로 반환
-```java   
-- 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 기록 수정하기 버튼 클릭시 UPDATE(수정) 작동 
+## 💡 [UPDATE] - 내용(contents) 변경 후 기록 수정 시 UPDATE(수정) / Update는 int형으로 반환 
+    - 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 기록 수정하기 버튼 클릭시 UPDATE(수정) 작동 
+```java 
 a. Controller
     - /src/main/java/com/spring/boot/controller/record_reg.java
         /* Upate(수정) - VO 사용 */
