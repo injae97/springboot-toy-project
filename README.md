@@ -48,7 +48,8 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
-        
+
+```java
 ## 💡 TIL
     [2023-01-26]
     a.  webapp에 필요한 디렉토리 생성
@@ -371,7 +372,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 log.info(vo_record.getStudyDay());
                 log.info(vo_record.getContents());
                 log.info(vo_record.getRegDay());
-        
+```        
         
 ## 💡 기록(CRUD)
     * CRUD
