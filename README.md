@@ -688,7 +688,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 VALUES (#{studyDay}, #{contents}, SYSDATE) 
             </insert>   
 
-## 💡 회원가입(CRUD)
+## 💡 회원가입(CRUD) - 응용 및 구조만 파악(실제로 작동 X)
     * ★ DB 흐름 ★
         - Controller > Service > DAO > Mapper > DB
             - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
