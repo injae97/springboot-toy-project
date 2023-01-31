@@ -580,7 +580,6 @@ e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
 ## 💡 [UPDATE] - 내용(contents) 변경 후 기록 수정 시 UPDATE(수정) / Update는 int형으로 반환 
 ```java
 * 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 기록 수정하기 버튼 클릭시 UPDATE(수정) 작동 
-    
 a. Controller
     - /src/main/java/com/spring/boot/controller/record_reg.java
         /* Upate(수정) - VO 사용 */
