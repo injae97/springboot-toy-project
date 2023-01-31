@@ -8,22 +8,22 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
         
 ## 💡 Spring Tool Suite Project Create
 ```java
-    - File > New > Spring Starter Project
-        - Service URL: https://start.spring.io
-        - Name: SpringBoot-Record
-        - Type: Maven 
-        - Packaging: War
-        - Java Version: 8
-        - Language: Java
-        - Group: com.spring.boot
-        - Artifact: SpringBoot-Record
-        - Version: 0.0.1-SNAPSHOT
-        - Description: SpringBoot-Record
-        - Package: com.spring.boot
-        
-    - Dependencies
-        - Spring Boot Version: 2.7.8
-        - Available: Spring Web > Finish
+- File > New > Spring Starter Project
+    - Service URL: https://start.spring.io
+    - Name: SpringBoot-Record
+    - Type: Maven 
+    - Packaging: War
+    - Java Version: 8
+    - Language: Java
+    - Group: com.spring.boot
+    - Artifact: SpringBoot-Record
+    - Version: 0.0.1-SNAPSHOT
+    - Description: SpringBoot-Record
+    - Package: com.spring.boot
+    
+- Dependencies
+    - Spring Boot Version: 2.7.8
+    - Available: Spring Web > Finish
 ```        
     
 ## 💡 HOW TO AUTO IMPORT WITH SHORTCUT KEYS?
@@ -386,7 +386,7 @@ j. logback
         d. D = Delete
         
     * 화면단 - 수정, 삭제 버튼 추가(record.jsp)
-        ```java
+    ```java
         - /src/main/webapp/WEB-INF/views/home/record.jsp
             <button type="button" onclick="location.href='/record_reg/insert'">게시글 등록</button>
 
@@ -401,7 +401,7 @@ j. logback
                 <div class="col"><a href="/record_reg/delete?key_id=<%= vo_record.getKeyId() %>">삭제</a></div>
             </div>
             <% } %>
-        ```    
+    ```   
     * ★ DB 흐름 ★
         - Controller > Service > DAO > Mapper > DB
             - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
