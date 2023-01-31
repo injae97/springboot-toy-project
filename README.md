@@ -36,21 +36,21 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
 
 ## 💡 HOW TO IMPORT DEPENDENCIES ON MAVEN?
 ```java
-    - https://mvnrepository.com/
-        - 해당 링크에서 추가 하려는 의존성을 검색 > 버전 클릭 > Maven > 복사한 후 pom.xml 
-        - pom.xml 오른쪽 마우스 > Maven > Update > Force Update of ~ 
-        
-        <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-        </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
+- https://mvnrepository.com/
+    - 해당 링크에서 추가 하려는 의존성을 검색 > 버전 클릭 > Maven > 복사한 후 pom.xml 
+    - pom.xml 오른쪽 마우스 > Maven > Update > Force Update of ~ 
+    
+    <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-jasper</artifactId>
+    </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+    </dependency>
 ```
 
 ## 💡 TIL
@@ -66,12 +66,14 @@ a.  webapp에 필요한 디렉토리 생성
         - /src/main/webapp/WEB-INF/views/jsp
             - 해당 경로에 테스트 목적으로 hello.jsp 생성
             * http://localhost:8080/jsp/hello.jsp 로 확인 가능
+            
 
 b. spring 환경 설정 
     - /src/main/resources/application.properties
         
         # port setting
         server.port = 8090
+        
 
 c. BootStrap
     - https://getbootstrap.com/docs/5.3/getting-started/introduction/
@@ -97,12 +99,14 @@ a. MVC 흐름
     - Request > 1. Controller > 2. Model > 3. View
         * WAS : Controller, Model, View
 
+
 b. Home Page Setting
     a. src/main/java/com/spring/boot/controller(package create)
     b. src/main/java/com/spring/boot/controller/Home.java(class create)
         - @Controller : 내가 바로 컨트롤러다.
         - @RequestMapping : @RequestMapping("/") 으로 jsp file index 화면 설정 완료(GET, POST 둘다 접근 가능)
             - 명확하게 해주기 위해 @GetMapping, @PostMapping 사용 할 것    
+
 
 c. views에서 폴더를 만들어서 분리(home, login)
     - home(folder) : /src/main/webapp/WEB-INF/views/home/ (home.jsp, member_list.jsp, record.jsp)
@@ -112,6 +116,7 @@ c. views에서 폴더를 만들어서 분리(home, login)
         - 자바단(Controller)에서 RequestMapping 와 GetMapping을 적절하게 사용
            - 그런 후 컨트롤러에 설정한 값대로 각 화면단 jsp 파일의 href 수정
 
+
 d. 공통 헤더 분리 후 import
     - /src/main/webapp/WEB-INF/views/common/ (header.jsp, footer.jsp)
     - 각 화면단(jsp) 파일들에서 header, footer 부분을 지우고 공통 헤더 부분을 import
@@ -119,9 +124,11 @@ d. 공통 헤더 분리 후 import
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
         * 꼭 지운 header, footer 위치에서 import 해줘야함
 
+
 e. application.properties Setting(jsp)
     - spring.mvc.view.prefix=/WEB-INF/views
     - spring.mvc.view.suffix=.jsp
+    
     
 [2023-01-28]
 a. application.properties Setting(Oracle DB Connection)
@@ -130,11 +137,13 @@ a. application.properties Setting(Oracle DB Connection)
     spring.datasource.username=SYSTEM
     spring.datasource.password=PASSWORD
     
+    
 [2023-01-29]
 a. ★ DB 흐름 ★
      - Controller> Service > DAO > Mapper > DB
         - Controller(대문) > Service(Service에서 DAO 값을 가져옴) > DAO(DAO 내용이 Mybatis 통해 Mapper) 
             * Controller 대문 역할을 하려면 @Autowired로 Service 값을 가져와야 한다.
+            
             
 b. Service package, DAO package, Mapper package 생성
     a. /src/main/java/com/spring/boot/dao 
@@ -143,7 +152,8 @@ b. Service package, DAO package, Mapper package 생성
         - XML 파일 생성(DB 쿼리)
     c. /src/main/java/com/spring/boot/service
         - @Service, @Autowired(DAO), class로 생성 (interface X)
-        
+       
+       
 c. jsp에 데이터 바인딩(Service > DAO > Mapper > DB > Controller(request) > View)
     <%@page import="java.util.List"%>
     <%@page import="java.util.Map"%>
@@ -163,8 +173,10 @@ c. jsp에 데이터 바인딩(Service > DAO > Mapper > DB > Controller(request) 
 
     * Controller에서 jsp 렌더링 하는 과정에 @ResponseBody 사용할 경우 jsp에서 view 화면 보여주지 않음(@ResponseBody 어노테이션 삭제)
 
+
 d. Model에 값을 담아서 넣는 방법
     - Controller Parameter에 Model model 추가 후  model.addAttribute("이름", 값); 로 추가하면 됨
+    
     
 e. VO package 생성
     a. /src/main/java/com/spring/boot/vo
@@ -176,16 +188,20 @@ e. VO package 생성
             private String reg_day;
             
     b. Mapper resultType 수정
-        <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">        
+        <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">   
+        
     c. Dao 수정(VO 객체에 접근하기 위해 type 수정)
         - public List<Vo_record> doStudyList(); // VO 객체로 반환
+        
     d. StudyService(VO 객체에 접근하기 위해 type 수정)
         - public List<Vo_record> doStudyList()
         - List<Vo_record> list = new ArrayList<>();
+        
     e. Controller 수정(VO 객체에 접근하기 위해 type 수정)
         - List<Vo_record> list = new ArrayList<>();
         - for(Vo_record vo_record : list) 
             - Getter & Setter 사용(vo_record.getKEY_ID())
+            
     f. JSP 수정
         <%@page import="com.spring.boot.vo.Vo_record"%>
         <%
@@ -202,17 +218,20 @@ e. VO package 생성
         <% } %>
         * STS에서 Syntax error on token ")", delete this token 해당 에러 무시 
 
+
 f. Lombok 사용
-    - https://mvnrepository.com/artifact/org.projectlombok/lombok/1.18.24    
+    - https://mvnrepository.com/artifact/org.projectlombok/lombok/1.18.24   
     a. pom.xml(dependency 추가)
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        
     b. Vo class file 수정
         - @Data : @Getter, @Setter , @RequiredArgsConstructor(@Data 어노테이션에 @Getter, @Setter, @RequiredArgsConstructor 3개가 내장되어 있음)
     * DocumentSite: https://projectlombok.org/
+    
     
 g. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기능)
     a. resultMap의 column값과 property에 지정한 값을 매핑할 수 있다.
@@ -247,11 +266,13 @@ g. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기
             private String study_day;
             private String contents;
             private String reg_day;
+  
         b. Controller
             System.out.println(vo_record.getKey_id());
             System.out.println(vo_record.getStudy_day());
             System.out.println(vo_record.getContents());
             System.out.println(vo_record.getReg_day());
+        
         c. Mapper
             <!-- Mybatis(resultMap) -->
             <resultMap type="com.spring.boot.vo.Vo_record" id="map_vo_record">
@@ -266,6 +287,7 @@ g. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기
                 SELECT to_char(key_id) AS key_id, study_day, contents, to_char(reg_day,'YYYY-mm-dd hh24mi') AS reg_day 
                 FROM Study_record
             </select>
+        
         d. jsp 
             <!-- returnType : VO 객체  -->
             <% for(Vo_record vo_record : list) { %>
@@ -276,7 +298,8 @@ g. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기
                 <div class="col"><%= vo_record.getReg_day() %></div>
             </div>
         <% } %>
-            
+        
+        
 h. mapUnderscoreToCamelCase(실무에서 거의 사용)        
     - 언더바 뒤에 첫글자는 대문자로 표기
         e.g key_id -> keyId
@@ -290,11 +313,13 @@ h. mapUnderscoreToCamelCase(실무에서 거의 사용)
             private String studyDay;
             private String contents;
             private String regDay;
+        
         b. Controller
             System.out.println(vo_record.getKeyId());
             System.out.println(vo_record.getStudyDay());
             System.out.println(vo_record.getContents());
             System.out.println(vo_record.getRegDay());
+        
         c. Mapper
             <!-- VO객체 DB연결(mapUnderscoreToCamelCase) -->
             <select id="doStudyList" resultType="com.spring.boot.vo.Vo_record">        
@@ -302,6 +327,7 @@ h. mapUnderscoreToCamelCase(실무에서 거의 사용)
                 FROM Study_record
                 ORDER BY key_id
             </select>
+        
         d. jsp 
             <!-- mapUnderscoreToCamelCase : VO 객체  -->
             <% for(Vo_record vo_record : list) { %>
@@ -312,6 +338,7 @@ h. mapUnderscoreToCamelCase(실무에서 거의 사용)
                 <div class="col"><%= vo_record.getRegDay() %></div>
             </div>
             <% } %>
+            
             
 i. YAML(application.yml)
     - 사람이 쉽게 읽을 수 있는 데이터 직렬화 양식
@@ -348,6 +375,7 @@ i. YAML(application.yml)
             mapper-locations: classpath:sqlmapper/*.xml
             configuration.map-underscore-to-camel-case: true
             
+            
 j. logback
     - 어떤 쿼리가 나오는지 로그로 찍는 방법
     a. logback-spring.xml 생성(/src/main/resources/logback-spring.xml)
@@ -377,6 +405,7 @@ j. logback
             log.info(vo_record.getContents());
             log.info(vo_record.getRegDay());
 ```        
+        
         
 ## 💡 기록(CRUD)
     * CRUD
@@ -461,6 +490,7 @@ a. Controller
             }
         }
 
+
 b. Service
     - /src/main/java/com/spring/boot/service/StudyService.java
         package com.spring.boot.service;
@@ -499,7 +529,8 @@ b. Service
                 return vo_record;
             }
         }
-        
+     
+     
 c. DAO
     - /src/main/java/com/spring/boot/dao/StudyDao.java
         package com.spring.boot.dao;
@@ -517,7 +548,8 @@ c. DAO
             /* One row Select: VO 객체로 반환(strKeyId 값을 그대로 전달) */
             public Vo_record doStudyListOne(String strKeyId);    
         }
-        
+     
+     
 d. Mapper
     <!-- VO객체 DB연결(doStudyListOne(one row select)) -->
     <select id="doStudyListOne" resultType="com.spring.boot.vo.Vo_record">        
@@ -525,6 +557,7 @@ d. Mapper
         FROM Study_record
         WHERE key_id = to_number(#{strKeyId})
     </select>
+
 
 e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
     - /src/main/webapp/WEB-INF/views/record/record_modify.jsp    
@@ -544,6 +577,7 @@ e. 화면단(JSP) - 수정 페이지 생성(record_modify.jsp)
         </form>
 ```
 
+
 ## 💡 [UPDATE] - 내용(contents) 변경 후 기록 수정 시 UPDATE(수정) / Update는 int형으로 반환
 ```java   
 - 화면단(JSP) - 수정 페이지(record_modify.jsp)에서 수정 > 공부일자(StudyDay), 공부내용(contents) 변경 후 기록 수정하기 버튼 클릭시 UPDATE(수정) 작동 
@@ -559,6 +593,7 @@ a. Controller
             return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
         }
         
+        
 b. Service
     - /src/main/java/com/spring/boot/service/StudyService.java        
         /* 
@@ -571,11 +606,13 @@ b. Service
             return intI;
         }
         
+        
 c. DAO
     - /src/main/java/com/spring/boot/dao/StudyDao.java
         /* 기록 수정 (UPDATE) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
         public int doStudyUp(Vo_record vo_record);
-        
+      
+      
 d. Mapper
     - /src/main/resources/sqlmapper/study_sql.xml
         <!-- [UPDATE] VO객체 수정 > 기록 수정 후 > 수정하기(기록 수정) - doStudyUp -->
@@ -586,6 +623,7 @@ d. Mapper
             WHERE key_id = to_number(#{keyId})    
         </update>
 ```
+
 
 ## 💡 [DELETE] - 기록 삭제 / DELETE도 int형으로 반환
 ```java
@@ -609,6 +647,7 @@ a. Controller
             return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
         }
         
+        
 b. Service
     - /src/main/java/com/spring/boot/service/StudyService.java        
         /* 
@@ -621,11 +660,13 @@ b. Service
             return intI;
         }
         
+        
 c. DAO
     - /src/main/java/com/spring/boot/dao/StudyDao.java
         /* 기록 삭제(DELETE) - 컨트롤러에서 String strKeyId로 받았기 때문에 그대로 사용 */
         public int doStudyDel(String strKeyId);
-        
+      
+      
 d. Mapper
     - /src/main/resources/sqlmapper/study_sql.xml
         <!-- [DELETE] 기록 삭제하기 - doStudyDel -->
@@ -635,6 +676,7 @@ d. Mapper
             WHERE key_id = to_number(#{keyId}) 
         </delete> 
 ```
+
 
 ## 💡 [INSERT] - 기록 등록 / INSERT도 int형으로 반환
 ```java
@@ -676,6 +718,7 @@ a. Controller
             return "redirect:/home/record"; // home.java(Controller)을 그대로 호출 
         }
 
+
 b. Service
     - /src/main/java/com/spring/boot/service/StudyService.java        
         /* 
@@ -687,10 +730,12 @@ b. Service
             int intI = studyDao.doStudyIns(vo_record); //  Mybatis - INSERT는 int형으로 반환
             return intI;
         }
+        
 c. DAO
     - /src/main/java/com/spring/boot/dao/StudyDao.java
         /* 기록 등록(INSERT) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
         public int doStudyIns(Vo_record vo_record);
+
 
 d. Mapper
     - /src/main/resources/sqlmapper/study_sql.xml
@@ -701,6 +746,7 @@ d. Mapper
             VALUES (#{studyDay}, #{contents}, SYSDATE) 
         </insert>   
 ```
+
 
 ## 💡 회원가입(CRUD) - 응용 및 구조만 파악(실제로 작동 X)
 ```java
@@ -726,6 +772,7 @@ a. VO 객체 생성(class)
             private String role;
             private String regDay;
         }
+
 
 b. DAO 생성(interface)
     - /src/main/java/com/spring/boot/dao/MemberDao.java
@@ -755,6 +802,7 @@ b. DAO 생성(interface)
             /* 회원 목록 등록(INSERT) - 컨트롤러에서 VO객체를 사용했기 때문에 VO 파라미터 설정 */
             public int doMemberIns(Vo_member vo_record);
         }
+        
         
 c. Mapper
     - /src/main/java/com/spring/boot/vo/Vo_member.java
@@ -806,6 +854,7 @@ c. Mapper
             </insert>   
             
         </mapper>
+        
         
 d. Service
     - /src/main/java/com/spring/boot/service/MemberService.java
@@ -869,6 +918,8 @@ d. Service
                 return intI;
             }
         }
+        
+        
 e. Controller
     - /src/main/java/com/spring/boot/controller/Member_reg.java
         package com.spring.boot.controller;
@@ -971,11 +1022,13 @@ e. Controller
             }
         }
         
+        
 f. JSP(view)
     - /src/main/webapp/WEB-INF/views/member/member_join.jsp
     - /src/main/webapp/WEB-INF/views/member/member_list.jsp
 ```    
-            
+     
+     
 ## 💡 Web Knowledge
 ```java
 * forward(request) vs sendRedirect(response)
@@ -988,7 +1041,8 @@ f. JSP(view)
         - /jsp/*.jsp (호출 성공)
         - https://www.naver.com (호출 실패 - Error)
         * 구조 : 요청자(Client) > request > localhost[WAS] Call > WEB-INF/views/list.jsp        
-                
+     
+     
     b. sendRedirect(response) = Spring redirect:/path 
         - /WEB-INF/views/*.jsp (호출 실패 - Error)
             - response는 요청자로 보내줘야하는데 자기 일 끝났다고 요청자 말고 직접 호출시킴(그래서 외부 접속이 됨)
