@@ -57,6 +57,44 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
     </dependency>
 ```
 
+## 💡 How to set@Slf4j in STS Using Maven?    
+    - https://mvnrepository.com/artifact/org.projectlombok/lombok/1.18.24   
+    
+    a. pom.xml(dependency 추가)
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    b. logback-spring.xml 생성
+        - /src/main/resources/logback-spring.xml    
+            <?xml version="1.0" encoding="UTF-8"?>
+            <configuration>
+                <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+                    <encoder>
+                        <Pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] %-5level %logger{36} - %msg%n</Pattern>
+                    </encoder>
+                </appender>
+
+                <!-- Logback 은 5단계의 로그 레벨을 가진다.
+                    심각도 수준은 off > Error > Warn > Info > Debug > Trace 이다.
+                -->
+                
+                <!-- name은 package 이름 -->
+                <logger name="com.spring.boot" level="Debug"/>
+                <root level="Info">
+                    <appender-ref ref="console"/>
+                </root>
+            </configuration>
+            
+      c. Logback(@Slf4j)
+          - Controller에 @Slf4j 추가(System.out.println > log.info())
+              log.info(vo_record.getKeyId());
+              log.info(vo_record.getStudyDay());
+              log.info(vo_record.getContents());
+              log.info(vo_record.getRegDay());
+              
 ## 💡 TIL
     a.  webapp에 필요한 디렉토리 생성
         1. /src/main/webapp/index.html 에 index.html 생성
@@ -218,24 +256,9 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 <div class="col"><%= vo_record.getREG_DAY() %></div>
             </div>
             <% } %>
-            * STS에서 Syntax error on token ")", delete this token 해당 에러 무시 
-
-
-    f. Lombok 사용
-        - https://mvnrepository.com/artifact/org.projectlombok/lombok/1.18.24   
-        a. pom.xml(dependency 추가)
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <scope>provided</scope>
-            </dependency>
-            
-        b. Vo class file 수정
-            - @Data : @Getter, @Setter , @RequiredArgsConstructor(@Data 어노테이션에 @Getter, @Setter, @RequiredArgsConstructor 3개가 내장되어 있음)
-        * DocumentSite: https://projectlombok.org/
+            * STS에서 Syntax error on token ")", delete this token 해당 에러 무시         
         
-        
-    g. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기능)
+    f. resultMap(존재하지 않는 column 별칭 사용 가능하게 해주는 기능)
         a. resultMap의 column값과 property에 지정한 값을 매핑할 수 있다.
             e.g VO 객체 컬럼에서 별칭을 사용해야한다면? resultMap을 사용하면된다.(기존 VO 값: study_day -> 별칭 사용할 컬럼 값:study_day20)
             * column은 VO객체 DB연결한 쿼리에서의 컬럼들이다.
@@ -302,7 +325,7 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
             <% } %>
             
             
-    h. mapUnderscoreToCamelCase(실무에서 거의 사용)        
+    g. mapUnderscoreToCamelCase(실무에서 거의 사용)        
         - 언더바 뒤에 첫글자는 대문자로 표기
             e.g key_id -> keyId
             
@@ -339,70 +362,4 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                     <div class="col"><%= vo_record.getContents() %></div>
                     <div class="col"><%= vo_record.getRegDay() %></div>
                 </div>
-                <% } %>
-                
-                
-    i. YAML(application.yml)
-        - 사람이 쉽게 읽을 수 있는 데이터 직렬화 양식
-        * application.yml
-            --- # port setting
-            server:
-                port: 8090
-
-            --- # Spring MVC view
-            spring:
-                mvc:
-                    view:
-                        prefix: /WEB-INF/views
-                        suffix: .jsp
-
-            --- # devtools reload(html, jsp)
-            spring:
-                devtools:
-                    livereload:
-                        enable: true 
-                    restart:
-                        enabled: false
-
-            --- # Oracle
-            spring:
-                datasource:
-                    driver-class-name: oracle.jdbc.driver.OracleDriver
-                    url: jdbc:oracle:thin:@localhost:1521
-                    username: SYSTEM
-                    password: PASSWORD
-             
-            --- # Mybatis
-            mybatis:
-                mapper-locations: classpath:sqlmapper/*.xml
-                configuration.map-underscore-to-camel-case: true
-                
-                
-    j. logback
-        - 어떤 쿼리가 나오는지 로그로 찍는 방법
-        a. logback-spring.xml 생성(/src/main/resources/logback-spring.xml)
-            <?xml version="1.0" encoding="UTF-8"?>
-            <configuration>
-                <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-                    <encoder>
-                        <Pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative] [%thread] %-5level %logger{36} - %msg%n</Pattern>
-                    </encoder>
-                </appender>
-
-                <!-- Logback 은 5단계의 로그 레벨을 가진다.
-                    심각도 수준은 off > Error > Warn > Info > Debug > Trace 이다.
-                -->
-                
-                <!-- name은 package 이름 -->
-                <logger name="com.spring.boot" level="Debug"/>
-                <root level="Info">
-                    <appender-ref ref="console"/>
-                </root>
-            </configuration>
-        
-        b. Logback(@Slf4j)
-            - Controller에 @Slf4j 추가(System.out.println > log.info())
-                log.info(vo_record.getKeyId());
-                log.info(vo_record.getStudyDay());
-                log.info(vo_record.getContents());
-                log.info(vo_record.getRegDay());
+                <% } %>         
