@@ -1,6 +1,10 @@
-## 💡 SpringBoot-Record (CRUD)
-- Spring boot + JSP + Mybatis(Oracle) + Spring Tool Suite (IDE)
-
+## 💡 SpringBoot-Toy-Project
+    - Framework: Spring boot
+    - View: JSP
+    - DBMS: Oracle
+    - Mapper: MyBatis
+    - IDE: Spring Tool Suite
+    
 ## 💡 Spring Tool Suite Download 
 https://github.com/spring-projects/sts4/wiki/Previous-Versions
 
