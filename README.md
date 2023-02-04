@@ -58,7 +58,6 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
 ```
 
 ## 💡 TIL
-    ```
     a.  webapp에 필요한 디렉토리 생성
         1. /src/main/webapp/index.html 에 index.html 생성
         2. /src/main/webapp/WEB-INF    
@@ -407,4 +406,3 @@ https://github.com/spring-projects/sts4/wiki/Previous-Versions
                 log.info(vo_record.getStudyDay());
                 log.info(vo_record.getContents());
                 log.info(vo_record.getRegDay());
-```    
