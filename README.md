@@ -1,4 +1,4 @@
-## 💡 SpringBoot-Toy-Project
+## 💡 SpringBoot-Toy-Project Env
     - Framework: Spring boot
     - View: JSP
     - DBMS: Oracle
